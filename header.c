@@ -171,3 +171,50 @@ void put() {
     }
   }
 }
+
+void aput() {
+  if (size < 0) {
+    printf("\nnegative size error on aput\n");
+    exit(1);
+  }
+  if (size == 0) {
+    printf("\naput on empty stack\n");
+    exit(1);
+  }
+  if (size == 1) {
+    if (ptr != NULL) {
+      size--;
+      /*
+      #ifdef DEBUG
+        printf("\nDEBUG put: %d\n", ptr[0]);
+      #endif
+      */
+      printf("%c", ptr[0]);
+      free(ptr);
+    } else {
+      printf("\nerror on free aput\n");
+      exit(1);
+    }
+  }
+  if (size > 1) {
+    if (ptr != NULL) {
+      size--;
+      int* tmp = (int *)realloc(ptr, size * sizeof(int));
+      if (tmp != NULL) {
+        printf("%c", ptr[size]);
+        /*
+        #ifdef DEBUG
+          printf("\nDEBUG put: %d\n", ptr[size]);
+        #endif
+        */
+        ptr = tmp;
+      } else {
+        printf("\nerror null ptr on aput realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on aput size > 1\n");
+      exit(1);
+    }
+  }
+}

@@ -2,42 +2,73 @@
 #include <stdlib.h>
 
 // config
-#define DEBUG
-#define NOOUT
+//#define DEBUG
+//#define NOOUT
 
-// init
-int *ptr;
-int size = 0;
-int store = 0;
+struct Sstack {
+  int *ptr;
+  int size;
+  int store;
+};
+
+struct Sstack stack;
+
+void init_stack() {
+  stack.size = 0;
+  stack.store = 0;
+}
+
+void deint_stack() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on deinit\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+#ifdef DEBUG
+    printf("DEBUG need deinit size: %d\n", stack.size);
+#endif
+  }
+  if (stack.size > 0) {
+#ifdef DEBUG
+    printf("DEBUG need deinit size: %d\n", stack.size);
+#endif
+    if (stack.ptr != NULL) {
+      free(stack.ptr);
+    } else {
+      printf("WARMING NULL PTR ON DEINIT\nPANIC!!!\n");
+      exit(1);
+    }
+  }
+}
 
 void push(int arg) {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on push\n");
     exit(1);
   }
-  if (size == 0) {
-    size++;
-    ptr = (int *)malloc(size * sizeof(int));
-    if (ptr != NULL) {
-      ptr[0] = arg;
+  if (stack.size == 0) {
+    stack.size++;
+    stack.ptr = (int *)malloc(stack.size * sizeof(int));
+    if (stack.ptr != NULL) {
+      stack.ptr[0] = arg;
 #ifdef DEBUG
-      printf("DEBUG after push: \n%d\n", ptr[0]);
+      printf("DEBUG after push: \n%d\n", stack.ptr[0]);
 #endif
     } else {
       printf("\nerror null ptr on push malloc\n");
       exit(1);
     }
-  } else if (size > 0) {
-    if (ptr != NULL) {
-      size++;
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  } else if (stack.size > 0) {
+    if (stack.ptr != NULL) {
+      stack.size++;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
-        ptr[size - 1] = arg;
+        stack.ptr = tmp;
+        stack.ptr[stack.size - 1] = arg;
 #ifdef DEBUG
         printf("DEBUG push:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
         printf("\n");
 #endif
@@ -53,36 +84,36 @@ void push(int arg) {
 }
 
 void pop() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on pop\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\npop on empty stack\n");
     exit(1);
   }
-  if (size == 1) {
-    if (ptr != NULL) {
-      size--;
+  if (stack.size == 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
 #ifdef DEBUG
-      printf("DEBUG pop: \n%d -> EMPTY\n", ptr[0]);
+      printf("DEBUG pop: \n%d -> EMPTY\n", stack.ptr[0]);
 #endif
-      free(ptr);
+      free(stack.ptr);
     } else {
       printf("\nerror on free pop\n");
       exit(1);
     }
   }
-  if (size > 1) {
-    if (ptr != NULL) {
-      size--;
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
+        stack.ptr = tmp;
 #ifdef DEBUG
         printf("DEBUG pop:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
         printf("\n");
 #endif
@@ -98,40 +129,41 @@ void pop() {
 }
 
 void spop() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on spop\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\nspop on empty stack\n");
     exit(1);
   }
-  if (size == 1) {
-    if (ptr != NULL) {
-      size--;
+  if (stack.size == 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
 #ifdef DEBUG
-      printf("DEBUG spop: \n%d -> EMPTY\n", ptr[0]);
+      printf("DEBUG spop: \n%d -> EMPTY\n", stack.ptr[0]);
+      printf("stored: %d\n", stack.ptr[0]);
 #endif
-      store = ptr[0];
-      free(ptr);
+      stack.store = stack.ptr[0];
+      free(stack.ptr);
     } else {
       printf("\nerror on free spop\n");
       exit(1);
     }
   }
-  if (size > 1) {
-    if (ptr != NULL) {
-      size--;
-      store = ptr[size - 1];
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
+      stack.store = stack.ptr[stack.size - 1];
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
+        stack.ptr = tmp;
 #ifdef DEBUG
         printf("DEBUG spop:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
-        printf("\nstored: %d\n", store);
+        printf("\nstored: %d\n", stack.store);
 #endif
       } else {
         printf("\nerror null ptr on pop realloc\n");
@@ -145,33 +177,33 @@ void spop() {
 }
 
 void rot() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on rot\n");
     exit(1);
   }
-  if (size >= 2) {
-    if (ptr != NULL) {
-      int tmp[size];
+  if (stack.size >= 2) {
+    if (stack.ptr != NULL) {
+      int tmp[stack.size];
 #ifdef DEBUG
       printf("DEBUG rot before:\n");
-      for (int i = 0; i < size; i++) {
-        printf("%d ", ptr[i]);
+      for (int i = 0; i < stack.size; i++) {
+        printf("%d ", stack.ptr[i]);
       }
       printf("\nDEBUG rot after:\n");
 #endif
       int temp;
       int start = 0;
-      int end = size - 1;
+      int end = stack.size - 1;
       while (start < end) {
-        temp = ptr[start];
-        ptr[start] = ptr[end];
-        ptr[end] = temp;
+        temp = stack.ptr[start];
+        stack.ptr[start] = stack.ptr[end];
+        stack.ptr[end] = temp;
         start++;
         end--;
       }
 #ifdef DEBUG
-      for (int i = 0; i < size; i++) {
-        printf("%d ", ptr[i]);
+      for (int i = 0; i < stack.size; i++) {
+        printf("%d ", stack.ptr[i]);
       }
       printf("\n");
 #endif
@@ -183,42 +215,42 @@ void rot() {
 }
 
 void put() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on put\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\nput on empty stack\n");
     exit(1);
   }
-  if (size == 1) {
-    if (ptr != NULL) {
-      size--;
+  if (stack.size == 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
 #ifdef DEBUG
-      printf("DEBUG put: \n%d -> EMPTY\n", ptr[0]);
+      printf("DEBUG put: \n%d -> EMPTY\n", stack.ptr[0]);
 #endif
 #ifndef NOOUT
-      printf("%d", ptr[0]);
+      printf("%d", stack.ptr[0]);
 #endif
-      free(ptr);
+      free(stack.ptr);
     } else {
       printf("\nerror on free put\n");
       exit(1);
     }
   }
-  if (size > 1) {
-    if (ptr != NULL) {
-      size--;
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
+        stack.ptr = tmp;
 #ifndef NOOUT
-        printf("%d", ptr[size]);
+        printf("%d", stack.ptr[stack.size]);
 #endif
 #ifdef DEBUG
         printf("DEBUG put:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
         printf("\n");
 #endif
@@ -234,42 +266,42 @@ void put() {
 }
 
 void aput() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on aput\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\naput on empty stack\n");
     exit(1);
   }
-  if (size == 1) {
-    if (ptr != NULL) {
-      size--;
+  if (stack.size == 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
 #ifdef DEBUG
-      printf("DEBUG aput: \n%d -> EMPTY\n", ptr[0]);
+      printf("DEBUG aput: \n%d -> EMPTY\n", stack.ptr[0]);
 #endif
 #ifndef NOOUT
-      printf("%c", ptr[0]);
+      printf("%c", stack.ptr[0]);
 #endif
-      free(ptr);
+      free(stack.ptr);
     } else {
       printf("\nerror on free aput\n");
       exit(1);
     }
   }
-  if (size > 1) {
-    if (ptr != NULL) {
-      size--;
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
+        stack.ptr = tmp;
 #ifndef NOOUT
-        printf("%c", ptr[size]);
+        printf("%c", stack.ptr[stack.size]);
 #endif
 #ifdef DEBUG
         printf("DEBUG aput:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
         printf("\n");
 #endif
@@ -285,24 +317,24 @@ void aput() {
 }
 
 void copy() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on copy\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\nerror copy on empty stack\n");
     exit(1);
-  } else if (size >= 1) {
-    if (ptr != NULL) {
-      size++;
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  } else if (stack.size >= 1) {
+    if (stack.ptr != NULL) {
+      stack.size++;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
-        ptr[size - 1] = ptr[size - 2];
+        stack.ptr = tmp;
+        stack.ptr[stack.size - 1] = stack.ptr[stack.size - 2];
 #ifdef DEBUG
         printf("DEBUG copy:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
         printf("\n");
 #endif
@@ -318,26 +350,26 @@ void copy() {
 }
 
 void swap() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on swap\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\nerror swap on empty stack\n");
     exit(1);
   }
-  if (size == 1) {
+  if (stack.size == 1) {
     printf("\nerror swap on sigle item\n");
     exit(1);
-  } else if (size > 1) {
-    if (ptr != NULL) {
-      int tmp = ptr[size - 1];
-      ptr[size - 1] = ptr[size - 2];
-      ptr[size - 2] = tmp;
+  } else if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      int tmp = stack.ptr[stack.size - 1];
+      stack.ptr[stack.size - 1] = stack.ptr[stack.size - 2];
+      stack.ptr[stack.size - 2] = tmp;
 #ifdef DEBUG
       printf("DEBUG swap:\n");
-      for (int i = 0; i < size; i++) {
-        printf("%d ", ptr[i]);
+      for (int i = 0; i < stack.size; i++) {
+        printf("%d ", stack.ptr[i]);
       }
       printf("\n");
 #endif
@@ -349,30 +381,30 @@ void swap() {
 }
 
 void sub() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on sub\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\nsub on empty stack\n");
     exit(1);
   }
-  if (size == 1) {
+  if (stack.size == 1) {
     printf("\nerror sub on sigle item\n");
     exit(1);
   }
-  if (size > 1) {
-    if (ptr != NULL) {
-      int res = ptr[size - 1] - ptr[size - 2];
-      size--;
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      int res = stack.ptr[stack.size - 1] - stack.ptr[stack.size - 2];
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
-        ptr[size - 1] = res;
+        stack.ptr = tmp;
+        stack.ptr[stack.size - 1] = res;
 #ifdef DEBUG
         printf("DEBUG sub:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
         printf("\n");
 #endif
@@ -388,30 +420,30 @@ void sub() {
 }
 
 void sum() {
-  if (size < 0) {
+  if (stack.size < 0) {
     printf("\nnegative size error on sum\n");
     exit(1);
   }
-  if (size == 0) {
+  if (stack.size == 0) {
     printf("\nsum on empty stack\n");
     exit(1);
   }
-  if (size == 1) {
+  if (stack.size == 1) {
     printf("\nerror sum on sigle item\n");
     exit(1);
   }
-  if (size > 1) {
-    if (ptr != NULL) {
-      int res = ptr[size - 1] + ptr[size - 2];
-      size--;
-      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      int res = stack.ptr[stack.size - 1] + stack.ptr[stack.size - 2];
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
-        ptr = tmp;
-        ptr[size - 1] = res;
+        stack.ptr = tmp;
+        stack.ptr[stack.size - 1] = res;
 #ifdef DEBUG
         printf("DEBUG sum:\n");
-        for (int i = 0; i < size; i++) {
-          printf("%d ", ptr[i]);
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
         }
         printf("\n");
 #endif

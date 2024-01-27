@@ -8,6 +8,7 @@
 // init
 int *ptr;
 int size = 0;
+int store = 0;
 
 void push(int arg) {
   if (size < 0) {
@@ -84,6 +85,53 @@ void pop() {
           printf("%d ", ptr[i]);
         }
         printf("\n");
+#endif
+      } else {
+        printf("\nerror null ptr on pop realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on pop size > 1\n");
+      exit(1);
+    }
+  }
+}
+
+void spop() {
+  if (size < 0) {
+    printf("\nnegative size error on spop\n");
+    exit(1);
+  }
+  if (size == 0) {
+    printf("\nspop on empty stack\n");
+    exit(1);
+  }
+  if (size == 1) {
+    if (ptr != NULL) {
+      size--;
+#ifdef DEBUG
+      printf("DEBUG spop: \n%d -> EMPTY\n", ptr[0]);
+#endif
+      store = ptr[0];
+      free(ptr);
+    } else {
+      printf("\nerror on free spop\n");
+      exit(1);
+    }
+  }
+  if (size > 1) {
+    if (ptr != NULL) {
+      size--;
+      store = ptr[size - 1];
+      int *tmp = (int *)realloc(ptr, size * sizeof(int));
+      if (tmp != NULL) {
+        ptr = tmp;
+#ifdef DEBUG
+        printf("DEBUG spop:\n");
+        for (int i = 0; i < size; i++) {
+          printf("%d ", ptr[i]);
+        }
+        printf("\nstored: %d\n", store);
 #endif
       } else {
         printf("\nerror null ptr on pop realloc\n");

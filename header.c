@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 // config
-//#define DEBUG
-//#define NOOUT
+// #define DEBUG
+// #define NOOUT
 
 struct Sstack {
   int *ptr;
@@ -25,12 +25,12 @@ void deint_stack() {
   }
   if (stack.size == 0) {
 #ifdef DEBUG
-    printf("DEBUG need deinit size: %d\n", stack.size);
+    printf("DEBUG no need to deinit size: %d\n", stack.size);
 #endif
   }
   if (stack.size > 0) {
 #ifdef DEBUG
-    printf("DEBUG need deinit size: %d\n", stack.size);
+    printf("DEBUG need to deinit size: %d\n", stack.size);
 #endif
     if (stack.ptr != NULL) {
       free(stack.ptr);
@@ -453,6 +453,146 @@ void sum() {
       }
     } else {
       printf("\nnull ptr on sum size > 1\n");
+      exit(1);
+    }
+  }
+}
+
+void mul() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on mul\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    printf("\nmul on empty stack\n");
+    exit(1);
+  }
+  if (stack.size == 1) {
+    printf("\nerror mul on sigle item\n");
+    exit(1);
+  }
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      int res = stack.ptr[stack.size - 1] * stack.ptr[stack.size - 2];
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
+      if (tmp != NULL) {
+        stack.ptr = tmp;
+        stack.ptr[stack.size - 1] = res;
+#ifdef DEBUG
+        printf("DEBUG mul:\n");
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
+        }
+        printf("\n");
+#endif
+      } else {
+        printf("\nerror null ptr on mul realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on mul size > 1\n");
+      exit(1);
+    }
+  }
+}
+
+void sdiv() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on div\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    printf("\ndiv on empty stack\n");
+    exit(1);
+  }
+  if (stack.size == 1) {
+    printf("\nerror div on sigle item\n");
+    exit(1);
+  }
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      int res = stack.ptr[stack.size - 1] / stack.ptr[stack.size - 2];
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
+      if (tmp != NULL) {
+        stack.ptr = tmp;
+        stack.ptr[stack.size - 1] = res;
+#ifdef DEBUG
+        printf("DEBUG div:\n");
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
+        }
+        printf("\n");
+#endif
+      } else {
+        printf("\nerror null ptr on div realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on div size > 1\n");
+      exit(1);
+    }
+  }
+}
+
+void rem() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on rem\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    printf("\nrem on empty stack\n");
+    exit(1);
+  }
+  if (stack.size == 1) {
+    printf("\nerror rem on sigle item\n");
+    exit(1);
+  }
+  if (stack.size > 1) {
+    if (stack.ptr != NULL) {
+      int res = stack.ptr[stack.size - 1] % stack.ptr[stack.size - 2];
+      stack.size--;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
+      if (tmp != NULL) {
+        stack.ptr = tmp;
+        stack.ptr[stack.size - 1] = res;
+#ifdef DEBUG
+        printf("DEBUG rem:\n");
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
+        }
+        printf("\n");
+#endif
+      } else {
+        printf("\nerror null ptr on rem realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on rem size > 1\n");
+      exit(1);
+    }
+  }
+}
+
+void drop() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on drop\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    printf("\ndrop on empty stack\n");
+    exit(1);
+  }
+  if (stack.size > 0) {
+    if (stack.ptr != NULL) {
+      stack.size = 0;
+      free(stack.ptr);
+#ifdef DEBUG
+      printf("DEBUG drop:\nEMPTY\n");
+#endif
+    } else {
+      printf("\nerror null ptr on drop\n");
       exit(1);
     }
   }

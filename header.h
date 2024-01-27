@@ -1,5 +1,5 @@
-//#define DEBUG
-//#define NOOUT
+#ifndef HEADER_H
+#define HEADER_H
 
 struct Sstack {
   int *ptr;
@@ -21,3 +21,8 @@ void copy();
 void swap();
 void sub();
 void sum();
+void mul();
+void sdiv();
+void rem();
+void drop();
+#endif

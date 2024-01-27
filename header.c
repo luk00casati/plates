@@ -3,6 +3,7 @@
 
 // init
 #define DEBUG
+#define NOOUT
 
 int *ptr;
 int size = 0;
@@ -18,7 +19,7 @@ void push(int arg) {
     if (ptr != NULL) {
       ptr[0] = arg;
       #ifdef DEBUG
-        printf("\nDEBUG push: %d\n", arg);
+        printf("DEBUG after push: \n%d\n", ptr[0]);
       #endif
     } else {
       printf("\nerror null ptr on push malloc\n");
@@ -32,7 +33,11 @@ void push(int arg) {
         ptr = tmp;
         ptr[size - 1] = arg;
         #ifdef DEBUG
-          printf("\nDEBUG push: %d\n", arg);
+          printf("DEBUG push:\n");
+          for (int i = 0; i < size; i++){
+            printf("%d ", ptr[i]);
+          }
+          printf("\n");
         #endif
       } else {
         printf("\nerror null ptr on push realloc\n");
@@ -58,7 +63,7 @@ void pop() {
     if (ptr != NULL) {
       size--;
       #ifdef DEBUG
-        printf("\nDEBUG pop: %d\n", ptr[0]);
+        printf("DEBUG pop: \nEMPTY\n");
       #endif
       free(ptr);
     } else {
@@ -73,7 +78,11 @@ void pop() {
       if (tmp != NULL) {
         ptr = tmp;
         #ifdef DEBUG
-          printf("\nDEBUG pop: %d\n", ptr[size]);
+          printf("DEBUG pop:\n");
+          for (int i = 0; i < size; i++){
+            printf("%d ", ptr[i]);
+          }
+          printf("\n");
         #endif
       } else {
         printf("\nerror null ptr on pop realloc\n");
@@ -95,9 +104,9 @@ void rot(){
     if (ptr != NULL){
       int tmp[size];
       #ifdef DEBUG
-        printf("\nDEBUG rot before:\n");
+        printf("DEBUG rot before:\n");
         for (int i = 0; i < size; i++){
-          printf("%d,", ptr[i]);
+          printf("%d ", ptr[i]);
         }
         printf("\nDEBUG rot after:\n");
       #endif
@@ -112,8 +121,8 @@ void rot(){
         end--; 
       } 
       #ifdef DEBUG 
-        for (int y = 0; y < size; y++){
-          printf("%d,", ptr[y]);
+        for (int i = 0; i < size; i++){
+          printf("%d ", ptr[i]);
         }
         printf("\n");
       #endif
@@ -137,12 +146,12 @@ void put() {
   if (size == 1) {
     if (ptr != NULL) {
       size--;
-      /*
       #ifdef DEBUG
-        printf("\nDEBUG put: %d\n", ptr[0]);
+        printf("DEBUG put: \nEMPTY\n");
       #endif
-      */
+      #ifndef NOOUT
       printf("%d", ptr[0]);
+      #endif
       free(ptr);
     } else {
       printf("\nerror on free put\n");
@@ -154,13 +163,17 @@ void put() {
       size--;
       int* tmp = (int *)realloc(ptr, size * sizeof(int));
       if (tmp != NULL) {
-        printf("%d", ptr[size]);
-        /*
-        #ifdef DEBUG
-          printf("\nDEBUG put: %d\n", ptr[size]);
-        #endif
-        */
         ptr = tmp;
+        #ifndef NOOUT
+        printf("%d", ptr[size]);
+        #endif
+        #ifdef DEBUG
+          printf("DEBUG put:\n");
+          for (int i = 0; i < size; i++){
+            printf("%d ", ptr[i]);
+          }
+          printf("\n");
+        #endif
       } else {
         printf("\nerror null ptr on put realloc\n");
         exit(1);
@@ -184,12 +197,12 @@ void aput() {
   if (size == 1) {
     if (ptr != NULL) {
       size--;
-      /*
       #ifdef DEBUG
-        printf("\nDEBUG put: %d\n", ptr[0]);
+        printf("DEBUG aput: \nEMPTY\n");
       #endif
-      */
+      #ifndef NOOUT
       printf("%c", ptr[0]);
+      #endif
       free(ptr);
     } else {
       printf("\nerror on free aput\n");
@@ -201,13 +214,17 @@ void aput() {
       size--;
       int* tmp = (int *)realloc(ptr, size * sizeof(int));
       if (tmp != NULL) {
-        printf("%c", ptr[size]);
-        /*
-        #ifdef DEBUG
-          printf("\nDEBUG put: %d\n", ptr[size]);
-        #endif
-        */
         ptr = tmp;
+        #ifndef NOOUT
+        printf("%c", ptr[size]);
+        #endif
+        #ifdef DEBUG
+          printf("DEBUG aput:\n");
+          for (int i = 0; i < size; i++){
+            printf("%d ", ptr[i]);
+          }
+          printf("\n");
+        #endif
       } else {
         printf("\nerror null ptr on aput realloc\n");
         exit(1);

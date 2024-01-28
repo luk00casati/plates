@@ -1,5 +1,5 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef CPIATTI_H
+#define CPIATTI_H
 
 struct Sstack {
   int *ptr;
@@ -12,8 +12,10 @@ extern struct Sstack stack;
 void init_stack();
 void deint_stack();
 void push(int arg);
+void sgetc();
+void sgeti();
 void pop();
-void spop();
+void stpop();
 void rot();
 void put();
 void aput();

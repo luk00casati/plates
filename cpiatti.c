@@ -52,7 +52,7 @@ void push(int arg) {
     if (stack.ptr != NULL) {
       stack.ptr[0] = arg;
 #ifdef DEBUG
-      printf("DEBUG after push: \n%d\n", stack.ptr[0]);
+      printf("DEBUG push: \n%d\n", stack.ptr[0]);
 #endif
     } else {
       printf("\nerror null ptr on push malloc\n");
@@ -78,6 +78,98 @@ void push(int arg) {
       }
     } else {
       printf("\nnull ptr on push size > 0\n");
+      exit(1);
+    }
+  }
+}
+
+void sgetc() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on sgetc\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    stack.size++;
+    stack.ptr = (int *)malloc(stack.size * sizeof(int));
+    if (stack.ptr != NULL) {
+      char input;
+      scanf("%c", &input);
+      stack.ptr[0] = (int) input;
+#ifdef DEBUG
+      printf("DEBUG sgetc: \n%d\n", stack.ptr[0]);
+#endif
+    } else {
+      printf("\nerror null ptr on sgetc malloc\n");
+      exit(1);
+    }
+  } else if (stack.size > 0) {
+    if (stack.ptr != NULL) {
+      stack.size++;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
+      if (tmp != NULL) {
+        char input;
+        stack.ptr = tmp;
+        scanf("%c", &input);
+        stack.ptr[stack.size - 1] = (int) input;
+#ifdef DEBUG
+        printf("DEBUG sgetc:\n");
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
+        }
+        printf("\n");
+#endif
+      } else {
+        printf("\nerror null ptr on sgetc realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on sgetc size > 0\n");
+      exit(1);
+    }
+  }
+}
+
+void sgeti() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on sgeti\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    stack.size++;
+    stack.ptr = (int *)malloc(stack.size * sizeof(int));
+    if (stack.ptr != NULL) {
+      int input;
+      scanf("%d", &input);
+      stack.ptr[0] = input;
+#ifdef DEBUG
+      printf("DEBUG sgeti: \n%d\n", stack.ptr[0]);
+#endif
+    } else {
+      printf("\nerror null ptr on sgeti malloc\n");
+      exit(1);
+    }
+  } else if (stack.size > 0) {
+    if (stack.ptr != NULL) {
+      stack.size++;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
+      if (tmp != NULL) {
+        int input;
+        stack.ptr = tmp;
+        scanf("%d", &input);
+        stack.ptr[stack.size - 1] = input;
+#ifdef DEBUG
+        printf("DEBUG sgeti:\n");
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
+        }
+        printf("\n");
+#endif
+      } else {
+        printf("\nerror null ptr on sgeti realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on sgeti size > 0\n");
       exit(1);
     }
   }
@@ -128,26 +220,26 @@ void pop() {
   }
 }
 
-void spop() {
+void stpop() {
   if (stack.size < 0) {
-    printf("\nnegative size error on spop\n");
+    printf("\nnegative size error on stpop\n");
     exit(1);
   }
   if (stack.size == 0) {
-    printf("\nspop on empty stack\n");
+    printf("\nstpop on empty stack\n");
     exit(1);
   }
   if (stack.size == 1) {
     if (stack.ptr != NULL) {
       stack.size--;
 #ifdef DEBUG
-      printf("DEBUG spop: \n%d -> EMPTY\n", stack.ptr[0]);
+      printf("DEBUG stpop: \n%d -> EMPTY\n", stack.ptr[0]);
       printf("stored: %d\n", stack.ptr[0]);
 #endif
       stack.store = stack.ptr[0];
       free(stack.ptr);
     } else {
-      printf("\nerror on free spop\n");
+      printf("\nerror on free stpop\n");
       exit(1);
     }
   }
@@ -159,18 +251,18 @@ void spop() {
       if (tmp != NULL) {
         stack.ptr = tmp;
 #ifdef DEBUG
-        printf("DEBUG spop:\n");
+        printf("DEBUG stpop:\n");
         for (int i = 0; i < stack.size; i++) {
           printf("%d ", stack.ptr[i]);
         }
         printf("\nstored: %d\n", stack.store);
 #endif
       } else {
-        printf("\nerror null ptr on pop realloc\n");
+        printf("\nerror null ptr on stpop realloc\n");
         exit(1);
       }
     } else {
-      printf("\nnull ptr on pop size > 1\n");
+      printf("\nnull ptr on stpop size > 1\n");
       exit(1);
     }
   }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // config
 // #define DEBUG
@@ -41,7 +42,7 @@ void deint_stack() {
   }
 }
 
-void push(int arg) {
+void push(const int arg) {
   if (stack.size < 0) {
     printf("\nnegative size error on push\n");
     exit(1);
@@ -94,7 +95,7 @@ void sgetc() {
     if (stack.ptr != NULL) {
       char input;
       scanf("%c", &input);
-      stack.ptr[0] = (int) input;
+      stack.ptr[0] = (int)input;
 #ifdef DEBUG
       printf("DEBUG sgetc: \n%d\n", stack.ptr[0]);
 #endif
@@ -110,7 +111,7 @@ void sgetc() {
         char input;
         stack.ptr = tmp;
         scanf("%c", &input);
-        stack.ptr[stack.size - 1] = (int) input;
+        stack.ptr[stack.size - 1] = (int)input;
 #ifdef DEBUG
         printf("DEBUG sgetc:\n");
         for (int i = 0; i < stack.size; i++) {
@@ -124,6 +125,58 @@ void sgetc() {
       }
     } else {
       printf("\nnull ptr on sgetc size > 0\n");
+      exit(1);
+    }
+  }
+}
+
+void sgets(const char *str) {
+  if (stack.size < 0) {
+    printf("\nnegative size error on sgets\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    stack.size = strlen(str);
+    stack.ptr = (int *)malloc(stack.size * sizeof(int));
+    if (stack.ptr != NULL) {
+      for (int i = 0; i < stack.size; i++) {
+        stack.ptr[i] = str[i];
+      }
+#ifdef DEBUG
+      printf("DEBUG sgets:\n");
+      for (int i = 0; i < stack.size; i++) {
+        printf("%d ", stack.ptr[i]);
+      }
+      printf("\n");
+#endif
+    } else {
+      printf("\nerror null ptr on sgets malloc\n");
+      exit(1);
+    }
+  } else if (stack.size > 0) {
+    if (stack.ptr != NULL) {
+      int startsize = stack.size;
+      int len = strlen(str);
+      stack.size += len;
+      int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
+      if (tmp != NULL) {
+        stack.ptr = tmp;
+        for (int i = 0; i < len; i++) {
+          stack.ptr[startsize + i] = str[i];
+        }
+#ifdef DEBUG
+        printf("DEBUG sgets:\n");
+        for (int i = 0; i < stack.size; i++) {
+          printf("%d ", stack.ptr[i]);
+        }
+        printf("\n");
+#endif
+      } else {
+        printf("\nerror null ptr on sgets realloc\n");
+        exit(1);
+      }
+    } else {
+      printf("\nnull ptr on sgets size > 0\n");
       exit(1);
     }
   }
@@ -687,5 +740,26 @@ void drop() {
       printf("\nerror null ptr on drop\n");
       exit(1);
     }
+  }
+}
+
+void stpeek() {
+  if (stack.size < 0) {
+    printf("\nnegative size error on stpeek\n");
+    exit(1);
+  }
+  if (stack.size == 0) {
+    printf("\nstpeek on empty stack\n");
+    exit(1);
+  }
+  if (stack.size > 0) {
+    stack.store = stack.ptr[stack.size - 1];
+#ifdef DEBUG
+    printf("DEBUG stpeek:\n");
+    for (int i = 0; i < stack.size; i++) {
+      printf("%d ", stack.ptr[i]);
+    }
+    printf("\nstored: %d\n", stack.store);
+#endif
   }
 }

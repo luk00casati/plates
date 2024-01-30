@@ -13,7 +13,7 @@ void init_stack();
 void deint_stack();
 void push(const int arg);
 void sgetc();
-void sgets(const char* str);
+void sgets(const char *str);
 void sgeti();
 void pop();
 void stpop();

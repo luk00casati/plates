@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 // config
 // #define DEBUG
@@ -128,6 +127,13 @@ void sgetc() {
       exit(1);
     }
   }
+}
+
+size_t strlen(const char *str)
+{
+    const char *s;
+    for (s = str; *s; ++s);
+    return(s - str);
 }
 
 void sgets(const char *str) {
@@ -328,7 +334,6 @@ void rot() {
   }
   if (stack.size >= 2) {
     if (stack.ptr != NULL) {
-      int tmp[stack.size];
 #ifdef DEBUG
       printf("DEBUG rot before:\n");
       for (int i = 0; i < stack.size; i++) {

@@ -1,3 +1,7 @@
 /testing
 main.c
 a.out
+cpiatti.o
+libcpiatti.so
+cpiattict
+out.c

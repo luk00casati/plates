@@ -1,6 +1,11 @@
 #!/bin/python3
-string_in:str = "PUSH 11"
-string_out:str = ""
+string_in:str = """GETS "ciao" ROT POP POP POP POP"""
+string_out:str = """"""
+open_brackets:int = 0
+closed_breackets:int = 0
+n_loop:int = 0
+n_for_loop:int = 0
+debug = True
 
 start_header:str = """
 #include <cpiatti.h>
@@ -24,7 +29,8 @@ int main(){
 
 split_str = string_in.split(' ')
 split_str = list(filter(lambda x: x != '', split_str))
-print(split_str)
+if debug:
+    print(split_str)
 iterator = iter(split_str)
 
 for word in iterator:
@@ -32,77 +38,107 @@ for word in iterator:
         try:
             value = next(iterator)
             if value.isdigit():
-                print(f"push({value});")
+                if debug:
+                    print(f"push({value});")
             elif value == "SIZE":
-                print("push(stack.size);")
+                if debug:
+                    print("push(stack.size);")
             elif value == "STORE":
-                print("push(stack.store);")
+                if debug:
+                    print("push(stack.store);")
             else:
                 print("Error: PUSH requires a valid value.")
+                exit(1)
         except StopIteration:
             print("Error: PUSH requires a value.")
+            exit(1)
 
-    if word == "GETS":
+    elif word == "GETS":
         try:
             string = next(iterator)
             if len(string) > 2 and string[0] == '"' and string[-1] == '"' and string.count('"') == 2:
-                print(f"sgets(&{string});")
+                if debug:
+                    print(f"sgets({string});")
             else:
-               print("Error: GETS requires a string.") 
+               print("Error: GETS requires a valid string.")
+               exit(1) 
         except StopIteration:
             print("Error: GETS requires a string.") 
+            exit(1)
 
     elif word == "POP":
+        if debug:
             print("pop();")
 
     elif word == "GETC":
+        if debug:
             print("sgetc();")
 
     elif word == "GETI":
+        if debug:
             print("sgeti();")
 
     elif word == "STPOP":
+        if debug:
             print("stpop();")
 
     elif word == "ROT":
+        if debug:
             print("rot();")
 
     elif word == "PUT":
+        if debug:
             print("put();")
 
     elif word == "APUT":
+        if debug:
             print("aput();")
 
     elif word == "COPY":
+        if debug:
             print("copy();")
 
     elif word == "SWAP":
+        if debug:
             print("swap();")
 
     elif word == "SUB":
+        if debug:
             print("sub();")
 
     elif word == "SUM":
+        if debug:
             print("sum();")
 
     elif word == "MUL":
+        if debug:
             print("mul();")
 
     elif word == "DIV":
+        if debug:
             print("sdiv();")
 
     elif word == "REM":
-            print("pop();")
+        if debug:
+            print("rem();")
 
     elif word == "DROP":
+        if debug:
             print("drop();")
 
     elif word == "STPEEK":
+        if debug:
             print("stpeek();")
 
     elif word[0] == '#':
         #comment
         pass
 
+    elif word == '}':
+        closed_breackets += 1
+        if debug:
+            print('}')
+
     else:
         print(f"error synthax {word}")
+        exit(1)

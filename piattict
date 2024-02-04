@@ -1,0 +1,108 @@
+#!/bin/python3
+string_in:str = "PUSH 11"
+string_out:str = ""
+
+start_header:str = """
+#include <cpiatti.h>
+#include <stdio.h>
+#include <stdlib.h>
+"""
+
+middle_header:str = """
+void code(){
+init_stack();
+"""
+
+end_header:str = """
+}
+
+int main(){
+    code();
+    return 0;
+}
+"""
+
+split_str = string_in.split(' ')
+split_str = list(filter(lambda x: x != '', split_str))
+print(split_str)
+iterator = iter(split_str)
+
+for word in iterator:
+    if word == "PUSH":
+        try:
+            value = next(iterator)
+            if value.isdigit():
+                print(f"push({value});")
+            elif value == "SIZE":
+                print("push(stack.size);")
+            elif value == "STORE":
+                print("push(stack.store);")
+            else:
+                print("Error: PUSH requires a valid value.")
+        except StopIteration:
+            print("Error: PUSH requires a value.")
+
+    if word == "GETS":
+        try:
+            string = next(iterator)
+            if len(string) > 2 and string[0] == '"' and string[-1] == '"' and string.count('"') == 2:
+                print(f"sgets(&{string});")
+            else:
+               print("Error: GETS requires a string.") 
+        except StopIteration:
+            print("Error: GETS requires a string.") 
+
+    elif word == "POP":
+            print("pop();")
+
+    elif word == "GETC":
+            print("sgetc();")
+
+    elif word == "GETI":
+            print("sgeti();")
+
+    elif word == "STPOP":
+            print("stpop();")
+
+    elif word == "ROT":
+            print("rot();")
+
+    elif word == "PUT":
+            print("put();")
+
+    elif word == "APUT":
+            print("aput();")
+
+    elif word == "COPY":
+            print("copy();")
+
+    elif word == "SWAP":
+            print("swap();")
+
+    elif word == "SUB":
+            print("sub();")
+
+    elif word == "SUM":
+            print("sum();")
+
+    elif word == "MUL":
+            print("mul();")
+
+    elif word == "DIV":
+            print("sdiv();")
+
+    elif word == "REM":
+            print("pop();")
+
+    elif word == "DROP":
+            print("drop();")
+
+    elif word == "STPEEK":
+            print("stpeek();")
+
+    elif word[0] == '#':
+        #comment
+        pass
+
+    else:
+        print(f"error synthax {word}")

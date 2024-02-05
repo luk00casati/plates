@@ -1,10 +1,11 @@
 #!/bin/python3
 string_in:str = """GETS "ciao" ROT POP POP POP POP"""
-string_out:str = """"""
+string_out:list = []
 open_brackets:int = 0
 closed_breackets:int = 0
 n_loop:int = 0
 n_for_loop:int = 0
+alias_list:list = []
 debug = True
 
 start_header:str = """
@@ -33,19 +34,35 @@ if debug:
     print(split_str)
 iterator = iter(split_str)
 
+std_noarg_function = {
+    "POP": "pop();",
+    "GETC": "sgetc();",
+    "GETI": "sgeti();",
+    "STPOP": "stpop();",
+    "ROT": "rot();",
+    "PUT": "put();",
+    "APUT": "aput();",
+    "COPY": "copy();",
+    "SWAP": "swap();",
+    "SUB": "sub();",
+    "SUM": "sum();",
+    "MUL": "mul();",
+    "DIV": "sdiv();",
+    "REM": "rem();",
+    "DROP": "drop();",
+    "STPEEK": "stpeek();"
+}
+
 for word in iterator:
     if word == "PUSH":
         try:
             value = next(iterator)
             if value.isdigit():
-                if debug:
-                    print(f"push({value});")
+                string_out.append(f"push({value});")
             elif value == "SIZE":
-                if debug:
-                    print("push(stack.size);")
+                string_out.append("push(stack.size);")
             elif value == "STORE":
-                if debug:
-                    print("push(stack.store);")
+                string_out.append("push(stack.store);")
             else:
                 print("Error: PUSH requires a valid value.")
                 exit(1)
@@ -57,8 +74,7 @@ for word in iterator:
         try:
             string = next(iterator)
             if len(string) > 2 and string[0] == '"' and string[-1] == '"' and string.count('"') == 2:
-                if debug:
-                    print(f"sgets({string});")
+                string_out.append(f"sgets({string});")
             else:
                print("Error: GETS requires a valid string.")
                exit(1) 
@@ -66,69 +82,8 @@ for word in iterator:
             print("Error: GETS requires a string.") 
             exit(1)
 
-    elif word == "POP":
-        if debug:
-            print("pop();")
-
-    elif word == "GETC":
-        if debug:
-            print("sgetc();")
-
-    elif word == "GETI":
-        if debug:
-            print("sgeti();")
-
-    elif word == "STPOP":
-        if debug:
-            print("stpop();")
-
-    elif word == "ROT":
-        if debug:
-            print("rot();")
-
-    elif word == "PUT":
-        if debug:
-            print("put();")
-
-    elif word == "APUT":
-        if debug:
-            print("aput();")
-
-    elif word == "COPY":
-        if debug:
-            print("copy();")
-
-    elif word == "SWAP":
-        if debug:
-            print("swap();")
-
-    elif word == "SUB":
-        if debug:
-            print("sub();")
-
-    elif word == "SUM":
-        if debug:
-            print("sum();")
-
-    elif word == "MUL":
-        if debug:
-            print("mul();")
-
-    elif word == "DIV":
-        if debug:
-            print("sdiv();")
-
-    elif word == "REM":
-        if debug:
-            print("rem();")
-
-    elif word == "DROP":
-        if debug:
-            print("drop();")
-
-    elif word == "STPEEK":
-        if debug:
-            print("stpeek();")
+    elif word in std_noarg_function:
+        string_out.append(std_noarg_function[word])
 
     elif word[0] == '#':
         #comment
@@ -138,7 +93,12 @@ for word in iterator:
         closed_breackets += 1
         if debug:
             print('}')
+        string_out.append('}')
 
     else:
         print(f"error synthax {word}")
         exit(1)
+
+if debug:
+    for i in string_out:
+        print(i)

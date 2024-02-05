@@ -1,10 +1,8 @@
 #!/bin/python3
-string_in:str = """GETS "ciao" ROT POP POP POP POP"""
+string_in:str = """GETS "ciao" ROT POP POP POP POP EXIT 0"""
 string_out:list = []
 open_brackets:int = 0
 closed_breackets:int = 0
-n_loop:int = 0
-n_for_loop:int = 0
 alias_list:list = []
 debug = True
 
@@ -53,6 +51,8 @@ std_noarg_function = {
     "STPEEK": "stpeek();"
 }
 
+compare_symbol = ["==", "<=", ">=", '<', '>', "!="]
+
 for word in iterator:
     if word == "PUSH":
         try:
@@ -89,10 +89,99 @@ for word in iterator:
         #comment
         pass
 
+    elif word == "LOOP":
+        try:
+            bracket = next(iterator)
+            if bracket == '{':
+                open_brackets += 1
+                string_out.append("while (1) {")
+            else:
+                print("Error: LOOP missing {")
+                exit(1)
+        except StopIteration:
+            print("Error: LOOP missing {")
+            exit(1)
+
+    elif word == "REPEAT":
+        try:
+            value = next(iterator)
+            bracket = next(iterator)
+            if value.isdigit():
+                if bracket == '{':
+                    open_brackets += 1
+                    string_out.append(f"for (size_t i = 0; i < {value}; i++) {{")
+                else:
+                    print("Error: REPEAT missing brackets.")
+                    exit(1)
+            elif value == "SIZE":
+                if bracket == '{':
+                    open_brackets += 1
+                    string_out.append("for (size_t i = 0; i < stack.size; i++) {")
+                else:
+                    print("Error: REPEAT missing brackets.")
+                    exit(1)
+            elif value == "STORE":
+                if bracket == '{':
+                    open_brackets += 1
+                    string_out.append("for (size_t i = 0; i < stack.store; i++) {")
+                else:
+                    print("Error: REPEAT missing brackets.")
+                    exit(1)
+            else:
+                print("Error: REPEAT requires a valid value.")
+                exit(1)
+        except StopIteration:
+            print("Error: REPEAT requires a value.")
+            exit(1)
+
+    elif word == "EXIT":
+        try:
+            value = next(iterator)
+            if value.isdigit():
+                string_out.append(f"deint_stack();\nexit({value});")
+            elif value == "SIZE":
+                string_out.append("deint_stack();\nexit(stack.size);")
+            elif value == "STORE":
+                string_out.append("deint_stack();\nexit(stack.store);")
+            else:
+                print("Error: EXIT requires a valid value.")
+                exit(1)
+        except StopIteration:
+            print("Error: EXIT requires a value.")
+            exit(1)
+
+    elif word == "IF":
+        try:
+            arg1 = next(iterator)
+            comparator = next(iterator)
+            arg2 = next(iterator)
+            open_brackets += 1
+
+            def get_arg_string(arg):
+                if arg.isdigit():
+                    return arg
+                elif arg == "SIZE":
+                    return "stack.size"
+                elif arg == "STORE":
+                    return "stack.store"
+                else:
+                    return arg
+
+            arg1_str = get_arg_string(arg1)
+            arg2_str = get_arg_string(arg2)
+
+            if comparator in compare_symbol:
+                string_out.append(f"if ({arg1_str} {comparator} {arg2_str}) {{")
+            else:
+                print("Error: IF requires a valid comparator.")
+                exit(1)
+
+        except StopIteration:
+            print("Error: IF requires three arguments.")
+            exit(1)
+            
     elif word == '}':
         closed_breackets += 1
-        if debug:
-            print('}')
         string_out.append('}')
 
     else:

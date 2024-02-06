@@ -1,5 +1,5 @@
 #!/bin/python3
-string_in:str = """GETS "ciao" ROT POP POP POP POP EXIT 0"""
+string_in:str = """GETS "ciao" ROT POP POP ciao POP POP EXIT 0"""
 string_out:list = []
 open_brackets:int = 0
 closed_breackets:int = 0
@@ -53,19 +53,26 @@ std_noarg_function = {
 
 compare_symbol = ["==", "<=", ">=", '<', '>', "!="]
 
+def get_arg_string(arg):
+    if arg.isdigit():
+        return arg
+    elif arg == "SIZE":
+        return "stack.size"
+    elif arg == "STORE":
+        return "stack.store"
+    else:
+        print("error value not valid: " + arg)
+        exit(1)
+
 for word in iterator:
     if word == "PUSH":
         try:
             value = next(iterator)
-            if value.isdigit():
-                string_out.append(f"push({value});")
-            elif value == "SIZE":
-                string_out.append("push(stack.size);")
-            elif value == "STORE":
-                string_out.append("push(stack.store);")
-            else:
-                print("Error: PUSH requires a valid value.")
-                exit(1)
+
+            value_str = get_arg_string(value)
+
+            string_out.append(f"push({value_str});")
+
         except StopIteration:
             print("Error: PUSH requires a value.")
             exit(1)
@@ -85,7 +92,7 @@ for word in iterator:
     elif word in std_noarg_function:
         string_out.append(std_noarg_function[word])
 
-    elif word[0] == '#':
+    elif word.islower():
         #comment
         pass
 
@@ -105,28 +112,13 @@ for word in iterator:
     elif word == "REPEAT":
         try:
             value = next(iterator)
+
+            value_str = get_arg_string(value)
+
             bracket = next(iterator)
-            if value.isdigit():
-                if bracket == '{':
-                    open_brackets += 1
-                    string_out.append(f"for (size_t i = 0; i < {value}; i++) {{")
-                else:
-                    print("Error: REPEAT missing brackets.")
-                    exit(1)
-            elif value == "SIZE":
-                if bracket == '{':
-                    open_brackets += 1
-                    string_out.append("for (size_t i = 0; i < stack.size; i++) {")
-                else:
-                    print("Error: REPEAT missing brackets.")
-                    exit(1)
-            elif value == "STORE":
-                if bracket == '{':
-                    open_brackets += 1
-                    string_out.append("for (size_t i = 0; i < stack.store; i++) {")
-                else:
-                    print("Error: REPEAT missing brackets.")
-                    exit(1)
+            if bracket == '{':
+                open_brackets += 1
+                string_out.append(f"for (size_t i = 0; i < {value_str}; i++) {{")
             else:
                 print("Error: REPEAT requires a valid value.")
                 exit(1)
@@ -137,12 +129,11 @@ for word in iterator:
     elif word == "EXIT":
         try:
             value = next(iterator)
+
+            value_str = get_arg_string(value)
+
             if value.isdigit():
-                string_out.append(f"deint_stack();\nexit({value});")
-            elif value == "SIZE":
-                string_out.append("deint_stack();\nexit(stack.size);")
-            elif value == "STORE":
-                string_out.append("deint_stack();\nexit(stack.store);")
+                string_out.append(f"deint_stack();\nexit({value_str});")
             else:
                 print("Error: EXIT requires a valid value.")
                 exit(1)
@@ -157,16 +148,6 @@ for word in iterator:
             arg2 = next(iterator)
             open_brackets += 1
 
-            def get_arg_string(arg):
-                if arg.isdigit():
-                    return arg
-                elif arg == "SIZE":
-                    return "stack.size"
-                elif arg == "STORE":
-                    return "stack.store"
-                else:
-                    return arg
-
             arg1_str = get_arg_string(arg1)
             arg2_str = get_arg_string(arg2)
 
@@ -179,7 +160,20 @@ for word in iterator:
         except StopIteration:
             print("Error: IF requires three arguments.")
             exit(1)
-            
+
+    elif word == "ELSE":
+        try:
+            bracket = next(iterator)
+            open_brackets += 1
+            if bracket == '{':
+                string_out.append("else {")
+            else:
+                print("Error: ELSE missing {")
+                exit(1)
+        except StopIteration:
+            print("Error: ELSE missing {")
+            exit(1)
+
     elif word == '}':
         closed_breackets += 1
         string_out.append('}')
@@ -187,6 +181,10 @@ for word in iterator:
     else:
         print(f"error synthax {word}")
         exit(1)
+
+if open_brackets != closed_breackets:
+    print("error brackets miss match")
+    exit(1)
 
 if debug:
     for i in string_out:

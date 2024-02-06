@@ -1,10 +1,10 @@
 #!/bin/python3
-string_in:str = """GETS "ciao" ROT POP POP ciao POP POP EXIT 0"""
 string_out:list = []
-open_brackets:int = 0
-closed_breackets:int = 0
 alias_list:list = []
 debug = True
+
+with open("test.cpiatti", "r") as readfile:
+    string_in = readfile.read()
 
 start_header:str = """
 #include <cpiatti.h>
@@ -25,12 +25,11 @@ int main(){
     return 0;
 }
 """
-
-split_str = string_in.split(' ')
-split_str = list(filter(lambda x: x != '', split_str))
+split_str = string_in.split()
+filtred_split_str = list(filter(lambda x: x != '', split_str))
 if debug:
-    print(split_str)
-iterator = iter(split_str)
+    print(filtred_split_str)
+iterator = iter(filtred_split_str)
 
 std_noarg_function = {
     "POP": "pop();",
@@ -53,7 +52,7 @@ std_noarg_function = {
 
 compare_symbol = ["==", "<=", ">=", '<', '>', "!="]
 
-def get_arg_string(arg):
+def get_arg_string(arg, name):
     if arg.isdigit():
         return arg
     elif arg == "SIZE":
@@ -61,7 +60,7 @@ def get_arg_string(arg):
     elif arg == "STORE":
         return "stack.store"
     else:
-        print("error value not valid: " + arg)
+        print(f"error {name} value not valid: " + arg)
         exit(1)
 
 for word in iterator:
@@ -69,7 +68,7 @@ for word in iterator:
         try:
             value = next(iterator)
 
-            value_str = get_arg_string(value)
+            value_str = get_arg_string(value, "PUSH")
 
             string_out.append(f"push({value_str});")
 
@@ -100,7 +99,6 @@ for word in iterator:
         try:
             bracket = next(iterator)
             if bracket == '{':
-                open_brackets += 1
                 string_out.append("while (1) {")
             else:
                 print("Error: LOOP missing {")
@@ -113,11 +111,10 @@ for word in iterator:
         try:
             value = next(iterator)
 
-            value_str = get_arg_string(value)
+            value_str = get_arg_string(value, "REPEAT")
 
             bracket = next(iterator)
             if bracket == '{':
-                open_brackets += 1
                 string_out.append(f"for (size_t i = 0; i < {value_str}; i++) {{")
             else:
                 print("Error: REPEAT requires a valid value.")
@@ -130,7 +127,7 @@ for word in iterator:
         try:
             value = next(iterator)
 
-            value_str = get_arg_string(value)
+            value_str = get_arg_string(value, "EXIT")
 
             if value.isdigit():
                 string_out.append(f"deint_stack();\nexit({value_str});")
@@ -146,10 +143,9 @@ for word in iterator:
             arg1 = next(iterator)
             comparator = next(iterator)
             arg2 = next(iterator)
-            open_brackets += 1
 
-            arg1_str = get_arg_string(arg1)
-            arg2_str = get_arg_string(arg2)
+            arg1_str = get_arg_string(arg1, "IF ARG1")
+            arg2_str = get_arg_string(arg2, "IF ARG2")
 
             if comparator in compare_symbol:
                 string_out.append(f"if ({arg1_str} {comparator} {arg2_str}) {{")
@@ -164,7 +160,6 @@ for word in iterator:
     elif word == "ELSE":
         try:
             bracket = next(iterator)
-            open_brackets += 1
             if bracket == '{':
                 string_out.append("else {")
             else:
@@ -175,17 +170,31 @@ for word in iterator:
             exit(1)
 
     elif word == '}':
-        closed_breackets += 1
         string_out.append('}')
+
+    elif word == '{':
+        pass
 
     else:
         print(f"error synthax {word}")
         exit(1)
 
-if open_brackets != closed_breackets:
-    print("error brackets miss match")
+if string_in.count('{') != string_in.count('}'):
+    print("Error: Mismatched number of open and closed brackets.")
     exit(1)
 
 if debug:
     for i in string_out:
         print(i)
+
+with open("out.c", "w") as writefile:
+    writefile.write(start_header)
+
+with open("out.c", "a") as writefile:
+    writefile.write(middle_header)
+
+with open("out.c", "a") as writefile:
+    writefile.writelines("\n".join(string_out))
+
+with open("out.c", "a") as writefile:
+    writefile.writelines(end_header)

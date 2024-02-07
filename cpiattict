@@ -1,7 +1,7 @@
 #!/bin/python3
 string_out:list = []
 alias_list:list = []
-debug = True
+debug = False
 
 with open("test.cpiatti", "r") as readfile:
     string_in = readfile.read()
@@ -10,6 +10,7 @@ start_header:str = """
 #include <cpiatti.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 """
 
 middle_header:str = """
@@ -20,7 +21,14 @@ init_stack();
 end_header:str = """
 }
 
+void handle_siganl(){
+    deint_stack();
+    printf("\\nBREAK\\n");
+    exit(0);
+}
+
 int main(){
+    signal(SIGINT, handle_siganl);
     code();
     return 0;
 }

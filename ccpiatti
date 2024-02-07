@@ -1,5 +1,4 @@
 #!/bin/sh
 set -e
-python3 cpiattict
+python3 cpiattict test.cpiatti
 cc out.c -lcpiatti -O2
-./a.out

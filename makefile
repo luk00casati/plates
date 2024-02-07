@@ -1,7 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -O2
-#TRANSPILER = cpiattict.c
-BIN = cpiattict
+TRANSPILER = cpiattict
 OBJ = cpiatti.o
 SRC = cpiatti.c
 HH = cpiatti.h
@@ -21,15 +20,12 @@ object: $(SRC)
 library: object
 	@$(CC) -shared -o $(LIB) $(OBJ)
 
-#transpiler: $(TRANSPILER)
-#	@$(CC) -o $(BIN) $(TRANSPILER) $(CFLAGS)
-
-install: library $(HH) #transpiler
+install: library $(HH)
 	@cp $(LIB) /usr/lib
 	@cp $(HH) /usr/include/
-	@cp $(BIN) /usr/bin/
+	@cp $(TRANSPILER) /usr/bin/
 
 remove:
 	@rm /usr/lib/$(LIB)
 	@rm /usr/include/$(HH)
-	@rm /usr/bin/$(BIN)
+	@rm /usr/bin/$(TRANSPILER)

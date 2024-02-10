@@ -19,16 +19,16 @@ def cpiatti_transpier(source:str, out:str = "out.c"):
     end_header:str = """
     }
 
-    void handle_siganl(){
-        deint_stack();
+    void handle_signal(){
+        deinit_stack();
         printf("\\nBREAK\\n");
         exit(0);
     }
 
     int main(){
-        signal(SIGINT, handle_siganl);
+        signal(SIGINT, handle_signal);
         code();
-        deint_stack();
+        deinit_stack();
         return 0;
     }
     """
@@ -120,7 +120,8 @@ def cpiatti_transpier(source:str, out:str = "out.c"):
 
                 bracket = next(iterator)
                 if bracket == '{':
-                    string_out.append(f"for (size_t i = 0; i < {value_str}; i++) {{")
+                    string_out.append(f"int s = {value_str};")
+                    string_out.append("for (size_t i = 0; i < s; i++) {")
                 else:
                     print("Error: REPEAT requires a valid value.")
                     exit(1)
@@ -135,7 +136,7 @@ def cpiatti_transpier(source:str, out:str = "out.c"):
                 value_str = get_arg_string(value, "EXIT")
 
                 if value.isdigit():
-                    string_out.append(f"deint_stack();\nexit({value_str});")
+                    string_out.append(f"deinit_stack();\nexit({value_str});")
                 else:
                     print("Error: EXIT requires a valid value.")
                     exit(1)

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // config
 // #define DEBUG
@@ -18,7 +19,7 @@ void init_stack() {
   stack.store = 0;
 }
 
-void deint_stack() {
+void deinit_stack() {
   if (stack.size < 0) {
     printf("\nnegative size error on deinit\n");
     exit(1);
@@ -127,13 +128,6 @@ void sgetc() {
       exit(1);
     }
   }
-}
-
-size_t strlen(const char *str)
-{
-    const char *s;
-    for (s = str; *s; ++s);
-    return(s - str);
 }
 
 void sgets(const char *str) {

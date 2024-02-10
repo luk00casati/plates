@@ -10,7 +10,7 @@ struct Sstack {
 extern struct Sstack stack;
 
 void init_stack();
-void deint_stack();
+void deinit_stack();
 void push(const int arg);
 void sgetc();
 void sgets(const char *str);

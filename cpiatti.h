@@ -9,6 +9,8 @@ struct Sstack {
 
 extern struct Sstack stack;
 
+void debug();
+void noout();
 void init_stack();
 void deinit_stack();
 void push(const int arg);

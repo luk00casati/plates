@@ -52,7 +52,9 @@ def cpiatti_transpier(source:str, out:str = "out.c"):
         "DIV": "sdiv();",
         "REM": "rem();",
         "DROP": "drop();",
-        "STPEEK": "stpeek();"
+        "STPEEK": "stpeek();",
+        "DEBUG": "debug();",
+        "NOOUT": "noout();"
     }
 
     compare_symbol = ["==", "<=", ">=", '<', '>', "!="]

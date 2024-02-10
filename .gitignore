@@ -1,7 +1,5 @@
 /testing
-main.c
 a.out
 cpiatti.o
 libcpiatti.so
 out.c
-test.cpiatti

@@ -381,7 +381,7 @@ void put() {
       if (bool_debug) {
         printf("DEBUG put: \n%d -> EMPTY\n", stack.ptr[0]);
       }
-      if (bool_noout) {
+      if (!bool_noout) {
         printf("%d", stack.ptr[0]);
       }
       free(stack.ptr);
@@ -396,7 +396,7 @@ void put() {
       int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
         stack.ptr = tmp;
-        if (bool_noout) {
+        if (!bool_noout) {
           printf("%d", stack.ptr[stack.size]);
         }
         if (bool_debug) {
@@ -432,7 +432,7 @@ void aput() {
       if (bool_debug) {
         printf("DEBUG aput: \n%d -> EMPTY\n", stack.ptr[0]);
       }
-      if (bool_noout) {
+      if (!bool_noout) {
         printf("%c", stack.ptr[0]);
       }
       free(stack.ptr);
@@ -447,7 +447,7 @@ void aput() {
       int *tmp = (int *)realloc(stack.ptr, stack.size * sizeof(int));
       if (tmp != NULL) {
         stack.ptr = tmp;
-        if (bool_noout) {
+        if (!bool_noout) {
           printf("%c", stack.ptr[stack.size]);
         }
         if (bool_debug) {

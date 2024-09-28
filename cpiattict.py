@@ -1,5 +1,3 @@
-#!/bin/python3
-
 def cpiatti_transpier(source:str, out:str = "out.c"):
     string_out:list = []
 

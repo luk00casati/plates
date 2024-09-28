@@ -87,6 +87,7 @@ void pop(struct Stack* s) {
         printf("DEBUG pop: \n%d -> EMPTY\n", s->ptr[0]);
       }
       free(s->ptr);
+      s->ptr = NULL;
     } else {
       printf("\nerror on free pop\n");
       exit(1);
@@ -164,6 +165,7 @@ void put(struct Stack* s) {
         printf("%d", s->ptr[0]);
       }
       free(s->ptr);
+      s->ptr = NULL;
     } else {
       printf("\nerror on free put\n");
       exit(1);
@@ -211,6 +213,7 @@ void sputc(struct Stack* s) {
         printf("%c", s->ptr[0]);
       }
       free(s->ptr);
+      s->ptr = NULL;
     } else {
       printf("\nerror on free putc\n");
       exit(1);
@@ -247,7 +250,8 @@ void copy(struct Stack* s) {
   if (s->size == 0) {
     printf("\nerror copy on empty stack\n");
     exit(1);
-  } else if (s->size >= 1) {
+  } 
+  if (s->size >= 1) {
     if (s->ptr != NULL) {
       s->size++;
       unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
@@ -415,6 +419,10 @@ void sdiv(struct Stack* s) {
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
+      if (s->ptr[s->size - 2] == 0){
+        printf("\nerror divison by zero\n");
+        exit(1);
+      }
       unsigned int res = s->ptr[s->size - 1] / s->ptr[s->size - 2];
       s->size--;
       unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
@@ -450,6 +458,10 @@ void rem(struct Stack* s) {
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
+      if (s->ptr[s->size - 2] == 0){
+        printf("\nerror modulus division by zero\n");
+        exit(1);
+      }
       unsigned int res = s->ptr[s->size - 1] % s->ptr[s->size - 2];
       s->size--;
       unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
@@ -483,6 +495,7 @@ void drop(struct Stack* s) {
     if (s->ptr != NULL) {
       s->size = 0;
       free(s->ptr);
+      s->ptr = NULL;
       if (s->debugprint) {
         printf("DEBUG drop:\nEMPTY\n");
       }

@@ -1,21 +1,21 @@
 #ifndef CPIATTI_H
 #define CPIATTI_H
 
-void debug();
-void noout();
-void init_stack();
-void deinit_stack();
-void push(const unsigned int val);
-void pop();
-void rot();
-void put();
-void putc();
-void copy();
-void swap();
-void sub();
-void sum();
-void mul();
-void rem();
-void drop();
+void debugenable(struct Stack* s);
+void init_stack(struct Stack* s);
+void deinit_stack(struct Stack* s);
+void push(struct Stack* s, const unsigned int val);
+void pop(struct Stack* s);
+void rot(struct Stack* s);
+void put(struct Stack* s);
+void sputc(struct Stack* s); //naming collision
+void sdiv(struct Stack* s); //naming collision
+void copy(struct Stack* s);
+void swap(struct Stack* s);
+void sub(struct Stack* s);
+void sum(struct Stack* s);
+void mul(struct Stack* s);
+void rem(struct Stack* s);
+void drop(struct Stack* s);
 
 #endif

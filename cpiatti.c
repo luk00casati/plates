@@ -1,42 +1,35 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-bool bool_debug = false;
-bool bool_noout = false;
-
-struct Sstack {
+struct Stack {
   unsigned int *ptr;
   unsigned int size;
-} stack;
+  short int debugprint;
+};
 
-void debug(){
-  bool_debug = true;
+void init_stack(struct Stack* s) {
+  s->size = 0;
+  s->ptr = NULL;
+  s->debugprint = 0;
 }
 
-void noout(){
-  bool_noout = true;
+void debugenable(struct Stack* s){
+  s->debugprint = 1;
 }
 
-void init_stack() {
-  stack.size = 0;
-  stack.ptr = NULL;
-}
-
-void deinit_stack() {
-  if (stack.size == 0) {
-    if (bool_debug) {
-      printf("DEBUG no need to deinit size: %d\n", stack.size);
+void deinit_stack(struct Stack* s) {
+  if (s->size == 0) {
+    if (s->debugprint) {
+      printf("DEBUG no need to deinit size: %d\n", s->size);
     }
     return;
   }
-  if (stack.size > 0) {
-    if (bool_debug) {
-      printf("DEBUG need to deinit size: %d\n", stack.size);
+  if (s->size > 0) {
+    if (s->debugprint) {
+      printf("DEBUG need to deinit size: %d\n", s->size);
     }
-    if (stack.ptr != NULL) {
-      free(stack.ptr);
+    if (s->ptr != NULL) {
+      free(s->ptr);
     } else {
       printf("WARMING NULL PTR ON DEINIT\nPANIC!!!\n");
       exit(1);
@@ -44,30 +37,30 @@ void deinit_stack() {
   }
 }
 
-void push(const unsigned int val) {
-  if (stack.size == 0) {
-    stack.size++;
-    stack.ptr = malloc(stack.size * sizeof(unsigned int));
-    if (stack.ptr != NULL) {
-      stack.ptr[0] = val;
-      if (bool_debug) {
-        printf("DEBUG push: \n%d\n", stack.ptr[0]);
+void push(struct Stack* s, const unsigned int val) {
+  if (s->size == 0) {
+    s->size++;
+    s->ptr = malloc(s->size * sizeof(unsigned int));
+    if (s->ptr != NULL) {
+      s->ptr[0] = val;
+      if (s->debugprint) {
+        printf("DEBUG push: \n%d\n", s->ptr[0]);
       }
     } else {
       printf("\nerror null ptr on push malloc\n");
       exit(1);
     }
-  } else if (stack.size > 0) {
-    if (stack.ptr != NULL) {
-      stack.size++;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  } else if (s->size > 0) {
+    if (s->ptr != NULL) {
+      s->size++;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        stack.ptr[stack.size - 1] = val;
-        if (bool_debug) {
+        s->ptr = tmp;
+        s->ptr[s->size - 1] = val;
+        if (s->debugprint) {
           printf("DEBUG push:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -82,33 +75,33 @@ void push(const unsigned int val) {
   }
 }
 
-void pop() {
-  if (stack.size == 0) {
+void pop(struct Stack* s) {
+  if (s->size == 0) {
     printf("\npop on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
-    if (stack.ptr != NULL) {
-      stack.size--;
-      if (bool_debug) {
-        printf("DEBUG pop: \n%d -> EMPTY\n", stack.ptr[0]);
+  if (s->size == 1) {
+    if (s->ptr != NULL) {
+      s->size--;
+      if (s->debugprint) {
+        printf("DEBUG pop: \n%d -> EMPTY\n", s->ptr[0]);
       }
-      free(stack.ptr);
+      free(s->ptr);
     } else {
       printf("\nerror on free pop\n");
       exit(1);
     }
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        if (bool_debug) {
+        s->ptr = tmp;
+        if (s->debugprint) {
           printf("DEBUG pop:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -123,29 +116,29 @@ void pop() {
   }
 }
 
-void rot() {
-  if (stack.size >= 2) {
-    if (stack.ptr != NULL) {
-      if (bool_debug) {
+void rot(struct Stack* s) {
+  if (s->size >= 2) {
+    if (s->ptr != NULL) {
+      if (s->debugprint) {
         printf("DEBUG rot before:\n");
-        for (unsigned int i = 0; i < stack.size; i++) {
-          printf("%d ", stack.ptr[i]);
+        for (unsigned int i = 0; i < s->size; i++) {
+          printf("%d ", s->ptr[i]);
         }
         printf("\nDEBUG rot after:\n");
       }
       unsigned int temp;
       unsigned int start = 0;
-      unsigned int end = stack.size - 1;
+      unsigned int end = s->size - 1;
       while (start < end) {
-        temp = stack.ptr[start];
-        stack.ptr[start] = stack.ptr[end];
-        stack.ptr[end] = temp;
+        temp = s->ptr[start];
+        s->ptr[start] = s->ptr[end];
+        s->ptr[end] = temp;
         start++;
         end--;
       }
-      if (bool_debug) {
-        for (unsigned int i = 0; i < stack.size; i++) {
-          printf("%d ", stack.ptr[i]);
+      if (s->debugprint) {
+        for (unsigned int i = 0; i < s->size; i++) {
+          printf("%d ", s->ptr[i]);
         }
         printf("\n");
       }
@@ -156,39 +149,39 @@ void rot() {
   }
 }
 
-void put() {
-  if (stack.size == 0) {
+void put(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nput on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
-    if (stack.ptr != NULL) {
-      stack.size--;
-      if (bool_debug) {
-        printf("DEBUG put: \n%d -> EMPTY\n", stack.ptr[0]);
+  if (s->size == 1) {
+    if (s->ptr != NULL) {
+      s->size--;
+      if (s->debugprint) {
+        printf("DEBUG put: \n%d -> EMPTY\n", s->ptr[0]);
       }
-      if (!bool_noout) {
-        printf("%d", stack.ptr[0]);
+      if (!s->debugprint) { //no out
+        printf("%d", s->ptr[0]);
       }
-      free(stack.ptr);
+      free(s->ptr);
     } else {
       printf("\nerror on free put\n");
       exit(1);
     }
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        if (!bool_noout) {
-          printf("%d", stack.ptr[stack.size]);
+        s->ptr = tmp;
+        if (!s->debugprint) { //no out
+          printf("%d", s->ptr[s->size]);
         }
-        if (bool_debug) {
+        if (s->debugprint) {
           printf("DEBUG put:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -203,39 +196,39 @@ void put() {
   }
 }
 
-void putc() {
-  if (stack.size == 0) {
+void sputc(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nputc on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
-    if (stack.ptr != NULL) {
-      stack.size--;
-      if (bool_debug) {
-        printf("DEBUG putc: \n%d -> EMPTY\n", stack.ptr[0]);
+  if (s->size == 1) {
+    if (s->ptr != NULL) {
+      s->size--;
+      if (s->debugprint) {
+        printf("DEBUG putc: \n%d -> EMPTY\n", s->ptr[0]);
       }
-      if (!bool_noout) {
-        printf("%c", stack.ptr[0]);
+      if (!s->debugprint) { //no out
+        printf("%c", s->ptr[0]);
       }
-      free(stack.ptr);
+      free(s->ptr);
     } else {
       printf("\nerror on free putc\n");
       exit(1);
     }
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        if (!bool_noout) {
-          printf("%c", stack.ptr[stack.size]);
+        s->ptr = tmp;
+        if (!s->debugprint) { //no out
+          printf("%c", s->ptr[s->size]);
         }
-        if (bool_debug) {
+        if (s->debugprint) {
           printf("DEBUG putc:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -250,21 +243,21 @@ void putc() {
   }
 }
 
-void copy() {
-  if (stack.size == 0) {
+void copy(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nerror copy on empty stack\n");
     exit(1);
-  } else if (stack.size >= 1) {
-    if (stack.ptr != NULL) {
-      stack.size++;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  } else if (s->size >= 1) {
+    if (s->ptr != NULL) {
+      s->size++;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        stack.ptr[stack.size - 1] = stack.ptr[stack.size - 2];
-        if (bool_debug) {
+        s->ptr = tmp;
+        s->ptr[s->size - 1] = s->ptr[s->size - 2];
+        if (s->debugprint) {
           printf("DEBUG copy:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -279,23 +272,23 @@ void copy() {
   }
 }
 
-void swap() {
-  if (stack.size == 0) {
+void swap(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nerror swap on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
+  if (s->size == 1) {
     printf("\nerror swap on sigle item\n");
     exit(1);
-  } else if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      unsigned int tmp = stack.ptr[stack.size - 1];
-      stack.ptr[stack.size - 1] = stack.ptr[stack.size - 2];
-      stack.ptr[stack.size - 2] = tmp;
-      if (bool_debug) {
+  } else if (s->size > 1) {
+    if (s->ptr != NULL) {
+      unsigned int tmp = s->ptr[s->size - 1];
+      s->ptr[s->size - 1] = s->ptr[s->size - 2];
+      s->ptr[s->size - 2] = tmp;
+      if (s->debugprint) {
         printf("DEBUG swap:\n");
-        for (unsigned int i = 0; i < stack.size; i++) {
-          printf("%d ", stack.ptr[i]);
+        for (unsigned int i = 0; i < s->size; i++) {
+          printf("%d ", s->ptr[i]);
         }
         printf("\n");
       }
@@ -306,27 +299,27 @@ void swap() {
   }
 }
 
-void sub() {
-  if (stack.size == 0) {
+void sub(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nsub on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
+  if (s->size == 1) {
     printf("\nerror sub on sigle item\n");
     exit(1);
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      unsigned int res = stack.ptr[stack.size - 1] - stack.ptr[stack.size - 2];
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      unsigned int res = s->ptr[s->size - 1] - s->ptr[s->size - 2];
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        stack.ptr[stack.size - 1] = res;
-        if (bool_debug) {
+        s->ptr = tmp;
+        s->ptr[s->size - 1] = res;
+        if (s->debugprint) {
           printf("DEBUG sub:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -341,27 +334,27 @@ void sub() {
   }
 }
 
-void sum() {
-  if (stack.size == 0) {
+void sum(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nsum on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
+  if (s->size == 1) {
     printf("\nerror sum on sigle item\n");
     exit(1);
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      unsigned int res = stack.ptr[stack.size - 1] + stack.ptr[stack.size - 2];
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      unsigned int res = s->ptr[s->size - 1] + s->ptr[s->size - 2];
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        stack.ptr[stack.size - 1] = res;
-        if (bool_debug) {
+        s->ptr = tmp;
+        s->ptr[s->size - 1] = res;
+        if (s->debugprint) {
           printf("DEBUG sum:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -376,27 +369,27 @@ void sum() {
   }
 }
 
-void mul() {
-  if (stack.size == 0) {
+void mul(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nmul on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
+  if (s->size == 1) {
     printf("\nerror mul on sigle item\n");
     exit(1);
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      unsigned int res = stack.ptr[stack.size - 1] * stack.ptr[stack.size - 2];
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      unsigned int res = s->ptr[s->size - 1] * s->ptr[s->size - 2];
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        stack.ptr[stack.size - 1] = res;
-        if (bool_debug) {
+        s->ptr = tmp;
+        s->ptr[s->size - 1] = res;
+        if (s->debugprint) {
           printf("DEBUG mul:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -411,27 +404,27 @@ void mul() {
   }
 }
 
-void div() {
-  if (stack.size == 0) {
+void sdiv(struct Stack* s) {
+  if (s->size == 0) {
     printf("\ndiv on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
+  if (s->size == 1) {
     printf("\nerror div on sigle item\n");
     exit(1);
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      unsigned int res = stack.ptr[stack.size - 1] / stack.ptr[stack.size - 2];
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      unsigned int res = s->ptr[s->size - 1] / s->ptr[s->size - 2];
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        stack.ptr[stack.size - 1] = res;
-        if (bool_debug) {
+        s->ptr = tmp;
+        s->ptr[s->size - 1] = res;
+        if (s->debugprint) {
           printf("DEBUG div:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -446,27 +439,27 @@ void div() {
   }
 }
 
-void rem() {
-  if (stack.size == 0) {
+void rem(struct Stack* s) {
+  if (s->size == 0) {
     printf("\nrem on empty stack\n");
     exit(1);
   }
-  if (stack.size == 1) {
+  if (s->size == 1) {
     printf("\nerror rem on sigle item\n");
     exit(1);
   }
-  if (stack.size > 1) {
-    if (stack.ptr != NULL) {
-      unsigned int res = stack.ptr[stack.size - 1] % stack.ptr[stack.size - 2];
-      stack.size--;
-      unsigned int *tmp = realloc(stack.ptr, stack.size * sizeof(unsigned int));
+  if (s->size > 1) {
+    if (s->ptr != NULL) {
+      unsigned int res = s->ptr[s->size - 1] % s->ptr[s->size - 2];
+      s->size--;
+      unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
-        stack.ptr = tmp;
-        stack.ptr[stack.size - 1] = res;
-        if (bool_debug) {
+        s->ptr = tmp;
+        s->ptr[s->size - 1] = res;
+        if (s->debugprint) {
           printf("DEBUG rem:\n");
-          for (unsigned int i = 0; i < stack.size; i++) {
-            printf("%d ", stack.ptr[i]);
+          for (unsigned int i = 0; i < s->size; i++) {
+            printf("%d ", s->ptr[i]);
           }
           printf("\n");
         }
@@ -481,16 +474,16 @@ void rem() {
   }
 }
 
-void drop() {
-  if (stack.size == 0) {
+void drop(struct Stack* s) {
+  if (s->size == 0) {
     printf("\ndrop on empty stack\n");
     exit(1);
   }
-  if (stack.size > 0) {
-    if (stack.ptr != NULL) {
-      stack.size = 0;
-      free(stack.ptr);
-      if (bool_debug) {
+  if (s->size > 0) {
+    if (s->ptr != NULL) {
+      s->size = 0;
+      free(s->ptr);
+      if (s->debugprint) {
         printf("DEBUG drop:\nEMPTY\n");
       }
     } else {

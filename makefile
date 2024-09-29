@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -Wall -Wextra -O2 -std=c11 -pedantic
+CFLAGS = -Wall -Wextra -O2 -std=c11 -pedantic -g
 TRANSPILER = cpiattict
 OBJ = cpiatti.o
 SRC = cpiatti.c

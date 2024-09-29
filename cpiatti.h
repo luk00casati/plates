@@ -5,7 +5,7 @@ void debugenable(struct Stack* s);
 void init_stack(struct Stack* s);
 void deinit_stack(struct Stack* s);
 void push(struct Stack* s, const unsigned int val);
-void pop(struct Stack* s);
+unsigned int pop(struct Stack* s);
 void rot(struct Stack* s);
 void put(struct Stack* s);
 void sputc(struct Stack* s); //naming collision
@@ -16,6 +16,8 @@ void sub(struct Stack* s);
 void sum(struct Stack* s);
 void mul(struct Stack* s);
 void rem(struct Stack* s);
+unsigned int peek(struct Stack* s);
+unsigned int size(struct Stack* s);
 void drop(struct Stack* s);
 
 #endif

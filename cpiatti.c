@@ -75,7 +75,8 @@ void push(struct Stack* s, const unsigned int val) {
   }
 }
 
-void pop(struct Stack* s) {
+unsigned int pop(struct Stack* s) {
+  unsigned int ret = 0;
   if (s->size == 0) {
     printf("\npop on empty stack\n");
     exit(1);
@@ -86,12 +87,15 @@ void pop(struct Stack* s) {
       if (s->debugprint) {
         printf("DEBUG pop: \n%d -> EMPTY\n", s->ptr[0]);
       }
+      ret = s->ptr[0];
       free(s->ptr);
       s->ptr = NULL;
+      
     } else {
       printf("\nerror on free pop\n");
       exit(1);
     }
+    return ret;
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
@@ -99,6 +103,7 @@ void pop(struct Stack* s) {
       unsigned int *tmp = realloc(s->ptr, s->size * sizeof(unsigned int));
       if (tmp != NULL) {
         s->ptr = tmp;
+        ret = s->ptr[s->size -1];
         if (s->debugprint) {
           printf("DEBUG pop:\n");
           for (unsigned int i = 0; i < s->size; i++) {
@@ -114,7 +119,9 @@ void pop(struct Stack* s) {
       printf("\nnull ptr on pop size > 1\n");
       exit(1);
     }
+    return ret;
   }
+  return 0;
 }
 
 void rot(struct Stack* s) {
@@ -484,6 +491,34 @@ void rem(struct Stack* s) {
       exit(1);
     }
   }
+}
+
+unsigned int peek(struct Stack* s) {
+  if (s->size == 0) {
+    printf("\npeek on empty stack\n");
+    exit(1);
+  }
+  if (s->size > 0) {
+    if (s->debugprint) {
+      printf("DEBUG peek:\n");
+      for (unsigned int i = 0; i < s->size; i++) {
+        printf("%d ", s->ptr[i]);
+      }
+      printf("\npeek val: %d\n", s->ptr[s->size - 1]);
+    }
+  }
+  return s->ptr[s->size - 1];
+}
+
+unsigned int size(struct Stack* s) {
+  if (s->debugprint) {
+    printf("DEBUG size:\n");
+    for (unsigned int i = 0; i < s->size; i++) {
+      printf("%d ", s->ptr[i]);
+    }
+    printf("\nsize val: %d\n", s->size);
+  }
+  return s->size;
 }
 
 void drop(struct Stack* s) {

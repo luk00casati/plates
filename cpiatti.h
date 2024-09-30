@@ -4,6 +4,7 @@
 void debugenable(struct Stack* s);
 void init_stack(struct Stack* s);
 void deinit_stack(struct Stack* s);
+void deinitquiterr(struct Stack* s);
 void push(struct Stack* s, const unsigned int val);
 unsigned int pop(struct Stack* s);
 void rot(struct Stack* s);

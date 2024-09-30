@@ -22,7 +22,6 @@ void deinit_stack(struct Stack* s) {
     if (s->debugprint) {
       printf("DEBUG no need to deinit size: %d\n", s->size);
     }
-    return;
   }
   if (s->size > 0) {
     if (s->debugprint) {
@@ -32,9 +31,13 @@ void deinit_stack(struct Stack* s) {
       free(s->ptr);
     } else {
       printf("WARMING NULL PTR ON DEINIT\nPANIC!!!\n");
-      exit(1);
     }
   }
+}
+
+void deinitquiterr(struct Stack* s){
+  deinit_stack(s);
+  exit(1);
 }
 
 void push(struct Stack* s, const unsigned int val) {
@@ -48,7 +51,7 @@ void push(struct Stack* s, const unsigned int val) {
       }
     } else {
       printf("\nerror null ptr on push malloc\n");
-      exit(1);
+      deinitquiterr(s);
     }
   } else if (s->size > 0) {
     if (s->ptr != NULL) {
@@ -66,11 +69,11 @@ void push(struct Stack* s, const unsigned int val) {
         }
       } else {
         printf("\nerror null ptr on push realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on push size > 0\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -79,7 +82,7 @@ unsigned int pop(struct Stack* s) {
   unsigned int ret = 0;
   if (s->size == 0) {
     printf("\npop on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     if (s->ptr != NULL) {
@@ -93,7 +96,7 @@ unsigned int pop(struct Stack* s) {
       
     } else {
       printf("\nerror on free pop\n");
-      exit(1);
+      deinitquiterr(s);
     }
     return ret;
   }
@@ -113,11 +116,11 @@ unsigned int pop(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on pop realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on pop size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
     return ret;
   }
@@ -152,7 +155,7 @@ void rot(struct Stack* s) {
       }
     } else {
       printf("\nnull ptr on rot\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -160,7 +163,7 @@ void rot(struct Stack* s) {
 void put(struct Stack* s) {
   if (s->size == 0) {
     printf("\nput on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     if (s->ptr != NULL) {
@@ -175,7 +178,7 @@ void put(struct Stack* s) {
       s->ptr = NULL;
     } else {
       printf("\nerror on free put\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
   if (s->size > 1) {
@@ -196,11 +199,11 @@ void put(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on put realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on put size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -208,7 +211,7 @@ void put(struct Stack* s) {
 void sputc(struct Stack* s) {
   if (s->size == 0) {
     printf("\nputc on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     if (s->ptr != NULL) {
@@ -223,7 +226,7 @@ void sputc(struct Stack* s) {
       s->ptr = NULL;
     } else {
       printf("\nerror on free putc\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
   if (s->size > 1) {
@@ -244,11 +247,11 @@ void sputc(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on putc realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on putc size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -256,7 +259,7 @@ void sputc(struct Stack* s) {
 void copy(struct Stack* s) {
   if (s->size == 0) {
     printf("\nerror copy on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   } 
   if (s->size >= 1) {
     if (s->ptr != NULL) {
@@ -274,11 +277,11 @@ void copy(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on copy realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on copy\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -286,11 +289,11 @@ void copy(struct Stack* s) {
 void swap(struct Stack* s) {
   if (s->size == 0) {
     printf("\nerror swap on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     printf("\nerror swap on sigle item\n");
-    exit(1);
+    deinitquiterr(s);
   } else if (s->size > 1) {
     if (s->ptr != NULL) {
       unsigned int tmp = s->ptr[s->size - 1];
@@ -305,7 +308,7 @@ void swap(struct Stack* s) {
       }
     } else {
       printf("\nnull ptr on swap\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -313,11 +316,11 @@ void swap(struct Stack* s) {
 void sub(struct Stack* s) {
   if (s->size == 0) {
     printf("\nsub on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     printf("\nerror sub on sigle item\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
@@ -336,11 +339,11 @@ void sub(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on sub realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on sub size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -348,11 +351,11 @@ void sub(struct Stack* s) {
 void sum(struct Stack* s) {
   if (s->size == 0) {
     printf("\nsum on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     printf("\nerror sum on sigle item\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
@@ -371,11 +374,11 @@ void sum(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on sum realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on sum size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -383,11 +386,11 @@ void sum(struct Stack* s) {
 void mul(struct Stack* s) {
   if (s->size == 0) {
     printf("\nmul on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     printf("\nerror mul on sigle item\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
@@ -406,11 +409,11 @@ void mul(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on mul realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on mul size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -418,17 +421,17 @@ void mul(struct Stack* s) {
 void sdiv(struct Stack* s) {
   if (s->size == 0) {
     printf("\ndiv on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     printf("\nerror div on sigle item\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
       if (s->ptr[s->size - 2] == 0){
         printf("\nerror divison by zero\n");
-        exit(1);
+        deinitquiterr(s);
       }
       unsigned int res = s->ptr[s->size - 1] / s->ptr[s->size - 2];
       s->size--;
@@ -445,11 +448,11 @@ void sdiv(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on div realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on div size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -457,17 +460,17 @@ void sdiv(struct Stack* s) {
 void rem(struct Stack* s) {
   if (s->size == 0) {
     printf("\nrem on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size == 1) {
     printf("\nerror rem on sigle item\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size > 1) {
     if (s->ptr != NULL) {
       if (s->ptr[s->size - 2] == 0){
         printf("\nerror modulus division by zero\n");
-        exit(1);
+        deinitquiterr(s);
       }
       unsigned int res = s->ptr[s->size - 1] % s->ptr[s->size - 2];
       s->size--;
@@ -484,11 +487,11 @@ void rem(struct Stack* s) {
         }
       } else {
         printf("\nerror null ptr on rem realloc\n");
-        exit(1);
+        deinitquiterr(s);
       }
     } else {
       printf("\nnull ptr on rem size > 1\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }
@@ -496,7 +499,7 @@ void rem(struct Stack* s) {
 unsigned int peek(struct Stack* s) {
   if (s->size == 0) {
     printf("\npeek on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size > 0) {
     if (s->debugprint) {
@@ -524,7 +527,7 @@ unsigned int size(struct Stack* s) {
 void drop(struct Stack* s) {
   if (s->size == 0) {
     printf("\ndrop on empty stack\n");
-    exit(1);
+    deinitquiterr(s);
   }
   if (s->size > 0) {
     if (s->ptr != NULL) {
@@ -536,7 +539,7 @@ void drop(struct Stack* s) {
       }
     } else {
       printf("\nerror null ptr on drop\n");
-      exit(1);
+      deinitquiterr(s);
     }
   }
 }

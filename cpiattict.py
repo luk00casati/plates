@@ -36,12 +36,9 @@ def cpiatti_transpier(source:str, out:str = "out.c"):
 
     std_noarg_function = {
         "POP": "pop();",
-        "GETC": "sgetc();",
-        "GETI": "sgeti();",
-        "STPOP": "stpop();",
         "ROT": "rot();",
         "PUT": "put();",
-        "APUT": "aput();",
+        "PUTC": "sputc();",
         "COPY": "copy();",
         "SWAP": "swap();",
         "SUB": "sub();",
@@ -50,9 +47,8 @@ def cpiatti_transpier(source:str, out:str = "out.c"):
         "DIV": "sdiv();",
         "REM": "rem();",
         "DROP": "drop();",
-        "STPEEK": "stpeek();",
-        "DEBUG": "debug();",
-        "NOOUT": "noout();"
+        "PEEK": "peek();",
+        "DEBUG": "debug();"
     }
 
     compare_symbol = ["==", "<=", ">=", '<', '>', "!="]

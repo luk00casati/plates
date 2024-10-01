@@ -3,6 +3,30 @@
 bool repeat = false;
 bool iff = false;
 FILE* output = NULL;
+const char* startheader = \
+"#include <cpiatti.h> \n \
+#include <stdio.h> \n \
+#include <stdlib.h> \n \
+#include <signal.h> \n \
+\n \
+void transpiledcode(){ \n \
+struct Stack s; \n \
+init_stack(s);\n\n//stanspiledcode\n\n";
+
+const char* endheader = \
+"}\n\n//end\n\nvoid handle_signal(){ \n \
+deinit_stack(s); \n \
+fprintf(stderr, SIGERRS); \n \
+exit(0); \n \
+} \n \
+\n \
+int main(){ \n \
+    signal(SIGINT, handle_signal); \n \
+    transpiledcode(); \n \
+    deinit_stack(s); \n \
+    return 0; \n \
+}";
+
 %}
 
 %%
@@ -67,8 +91,9 @@ void transpile(const char* path ,const char* flag){
         fprintf(stderr, "invalid arg transpile");
         exit(1);
         }
+    fprintf(output, "%s", startheader);
     yylex();
     fclose(yyin);
-    fprintf(output, "deninit_stack(s);");
+    fprintf(output, "%s", endheader);
     fclose(output);
 }

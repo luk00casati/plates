@@ -492,8 +492,32 @@ char *yytext;
 bool repeat = false;
 bool iff = false;
 FILE* output = NULL;
-#line 495 "lex.yy.c"
-#line 496 "lex.yy.c"
+const char* startheader = \
+"#include <cpiatti.h> \n \
+#include <stdio.h> \n \
+#include <stdlib.h> \n \
+#include <signal.h> \n \
+\n \
+void transpiledcode(){ \n \
+struct Stack s; \n \
+init_stack(struct Stack* s);\n\n//stanspiledcode\n\n";
+
+const char* endheader = \
+"}\n\n//end\n\nvoid handle_signal(){ \n \
+deinit_stack(struct Stack* s); \n \
+fprintf(stderr, SIGERRS); \n \
+exit(0); \n \
+} \n \
+\n \
+int main(){ \n \
+    signal(SIGINT, handle_signal); \n \
+    transpiledcode(); \n \
+    deinit_stack(struct Stack* s); \n \
+    return 0; \n \
+}";
+
+#line 519 "lex.yy.c"
+#line 520 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -710,9 +734,9 @@ YY_DECL
 		}
 
 	{
-#line 8 "transpiler.l"
+#line 32 "transpiler.l"
 
-#line 715 "lex.yy.c"
+#line 739 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -771,173 +795,173 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 9 "transpiler.l"
-{ fprintf(output,  "push( s," );}
+#line 33 "transpiler.l"
+{ fprintf(output,  "push( struct Stack* s," );}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 10 "transpiler.l"
+#line 34 "transpiler.l"
 { fprintf(output, " %s ", yytext);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 11 "transpiler.l"
-{ fprintf(output, "(unsigned int POP = pop( s )");}
+#line 35 "transpiler.l"
+{ fprintf(output, "(unsigned int POP = pop( struct Stack* s )");}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 12 "transpiler.l"
-{fprintf(output, "rot( s");}
+#line 36 "transpiler.l"
+{fprintf(output, "rot( struct Stack* s");}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 13 "transpiler.l"
-{fprintf(output, "put( s");}
+#line 37 "transpiler.l"
+{fprintf(output, "put( struct Stack* s");}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 14 "transpiler.l"
-{fprintf(output, "sputc( s");}
+#line 38 "transpiler.l"
+{fprintf(output, "sputc( struct Stack* s");}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 15 "transpiler.l"
-{fprintf(output, "sdiv( s");}
+#line 39 "transpiler.l"
+{fprintf(output, "sdiv( struct Stack* s");}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 16 "transpiler.l"
-{fprintf(output, "copy( s");}
+#line 40 "transpiler.l"
+{fprintf(output, "copy( struct Stack* s");}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 17 "transpiler.l"
-{fprintf(output, "swap( s");}
+#line 41 "transpiler.l"
+{fprintf(output, "swap( struct Stack* s");}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 18 "transpiler.l"
-{fprintf(output, "sub( s");}
+#line 42 "transpiler.l"
+{fprintf(output, "sub( struct Stack* s");}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 19 "transpiler.l"
-{fprintf(output, "mul( s");}
+#line 43 "transpiler.l"
+{fprintf(output, "mul( struct Stack* s");}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 20 "transpiler.l"
-{fprintf(output, "sum( s");}
+#line 44 "transpiler.l"
+{fprintf(output, "sum( struct Stack* s");}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 21 "transpiler.l"
-{fprintf(output, "rem( s");}
+#line 45 "transpiler.l"
+{fprintf(output, "rem( struct Stack* s");}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 22 "transpiler.l"
-{ fprintf(output, "(unsigned int PEEk = peek( s )");}
+#line 46 "transpiler.l"
+{ fprintf(output, "(unsigned int PEEK = peek( struct Stack* s )");}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 23 "transpiler.l"
-{ fprintf(output, "(unsigned int SIZE = size( s )");}
+#line 47 "transpiler.l"
+{ fprintf(output, "(unsigned int SIZE = size( struct Stack* ss )");}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 24 "transpiler.l"
-{fprintf(output, "drop( s");}
+#line 48 "transpiler.l"
+{fprintf(output, "drop( struct Stack* s");}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 25 "transpiler.l"
+#line 49 "transpiler.l"
 {fprintf(output, "for (unsigned int i = 0; i < "); repeat = true;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 26 "transpiler.l"
-{fprintf(output, "debugenable( s");}
+#line 50 "transpiler.l"
+{fprintf(output, "debugenable( struct Stack* s");}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 27 "transpiler.l"
+#line 51 "transpiler.l"
 {fprintf(output, "while(1)");}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 28 "transpiler.l"
+#line 52 "transpiler.l"
 {fprintf(output, "break");}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 29 "transpiler.l"
+#line 53 "transpiler.l"
 {fprintf(output, "if ("); iff = true; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 30 "transpiler.l"
+#line 54 "transpiler.l"
 {fprintf(output, " );\n");}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 31 "transpiler.l"
+#line 55 "transpiler.l"
 {fprintf(output, " == ");}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 32 "transpiler.l"
+#line 56 "transpiler.l"
 {fprintf(output, " >= ");}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 33 "transpiler.l"
+#line 57 "transpiler.l"
 {fprintf(output, " <= ");}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 34 "transpiler.l"
+#line 58 "transpiler.l"
 {fprintf(output, " != ");}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 35 "transpiler.l"
+#line 59 "transpiler.l"
 {fprintf(output, " > ");}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 36 "transpiler.l"
+#line 60 "transpiler.l"
 {fprintf(output, " < ");}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 37 "transpiler.l"
+#line 61 "transpiler.l"
 {if (repeat){fprintf(output, "; i++) {\n"); repeat = false;}
 else if (iff){fprintf(output, ") {"); iff = false; }
 else{fprintf(output, " {\n");} }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 40 "transpiler.l"
+#line 64 "transpiler.l"
 {fprintf(output, " }\n");}
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 41 "transpiler.l"
+#line 65 "transpiler.l"
 { }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 42 "transpiler.l"
+#line 66 "transpiler.l"
 {fprintf(stderr, "error undefine chars/char: %s\n", yytext);exit(1);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 43 "transpiler.l"
+#line 67 "transpiler.l"
 ECHO;
 	YY_BREAK
-#line 940 "lex.yy.c"
+#line 964 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1942,7 +1966,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 43 "transpiler.l"
+#line 67 "transpiler.l"
 
 
 void transpile(const char* path ,const char* flag){
@@ -1970,9 +1994,10 @@ void transpile(const char* path ,const char* flag){
         fprintf(stderr, "invalid arg transpile");
         exit(1);
         }
+    fprintf(output, "%s", startheader);
     yylex();
     fclose(yyin);
-    fprintf(output, "deninit_stack(s);");
+    fprintf(output, "%s", endheader);
     fclose(output);
 }
 

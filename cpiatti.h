@@ -1,6 +1,9 @@
 #ifndef CPIATTI_H
 #define CPIATTI_H
 
+#define STRING(s) #s
+#define SIGERRS STRING(SIGINT recived); 
+
 struct Stack {
   unsigned int *ptr;
   unsigned int size;

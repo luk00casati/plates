@@ -1,11 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-struct Stack {
-  unsigned int *ptr;
-  unsigned int size;
-  short int debugprint;
-};
+#include "cpiatti.h"
 
 void init_stack(struct Stack* s) {
   s->size = 0;

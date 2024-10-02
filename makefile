@@ -21,11 +21,11 @@ library: object
 	@$(CC) -shared -o $(LIB) $(OBJ)
 
 install: library $(HH)
-	@cp $(LIB) /usr/local/lib
-	@cp $(HH) /usr/local/include/
+	@cp $(LIB) /usr/lib
+	@cp $(HH) /usr/include/
 	#@cp $(TRANSPILER) /usr/bin/
 
 remove:
-	@rm /usr/local/lib/$(LIB)
-	@rm /usr/local/include/$(HH)
+	@rm /usr/lib/$(LIB)
+	@rm /usr/include/$(HH)
 	#@rm /usr/bin/$(TRANSPILER)

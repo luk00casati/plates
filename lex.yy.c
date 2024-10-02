@@ -498,21 +498,21 @@ const char* startheader = \
 #include <stdlib.h> \n \
 #include <signal.h> \n \
 \n \
-void transpiledcode(){ \n \
-struct Stack s; \n \
-init_stack(struct Stack* s);\n\n//stanspiledcode\n\n";
+void transpiledcode(struct Stack* s){ \n \
+init_stack(s);\n\n//stanspiledcode\n\n";
 
 const char* endheader = \
 "}\n\n//end\n\nvoid handle_signal(){ \n \
-deinit_stack(struct Stack* s); \n \
+//free stack \n \
 fprintf(stderr, SIGERRS); \n \
 exit(0); \n \
 } \n \
 \n \
 int main(){ \n \
+    struct Stack s; \n \
     signal(SIGINT, handle_signal); \n \
-    transpiledcode(); \n \
-    deinit_stack(struct Stack* s); \n \
+    transpiledcode(&s); \n \
+    deinit_stack(&s); \n \
     return 0; \n \
 }";
 
@@ -796,7 +796,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 33 "transpiler.l"
-{ fprintf(output,  "push( struct Stack* s," );}
+{ fprintf(output,  "push( s," );}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
@@ -806,72 +806,72 @@ YY_RULE_SETUP
 case 3:
 YY_RULE_SETUP
 #line 35 "transpiler.l"
-{ fprintf(output, "(unsigned int POP = pop( struct Stack* s )");}
+{ fprintf(output, "(unsigned int POP = pop( s )");}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 36 "transpiler.l"
-{fprintf(output, "rot( struct Stack* s");}
+{fprintf(output, "rot( s");}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 37 "transpiler.l"
-{fprintf(output, "put( struct Stack* s");}
+{fprintf(output, "put( s");}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 38 "transpiler.l"
-{fprintf(output, "sputc( struct Stack* s");}
+{fprintf(output, "sputc( s");}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 39 "transpiler.l"
-{fprintf(output, "sdiv( struct Stack* s");}
+{fprintf(output, "sdiv( s");}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 40 "transpiler.l"
-{fprintf(output, "copy( struct Stack* s");}
+{fprintf(output, "copy( s");}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 41 "transpiler.l"
-{fprintf(output, "swap( struct Stack* s");}
+{fprintf(output, "swap( s");}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 42 "transpiler.l"
-{fprintf(output, "sub( struct Stack* s");}
+{fprintf(output, "sub( s");}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 43 "transpiler.l"
-{fprintf(output, "mul( struct Stack* s");}
+{fprintf(output, "mul( s");}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 44 "transpiler.l"
-{fprintf(output, "sum( struct Stack* s");}
+{fprintf(output, "sum( s");}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 45 "transpiler.l"
-{fprintf(output, "rem( struct Stack* s");}
+{fprintf(output, "rem( s");}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 46 "transpiler.l"
-{ fprintf(output, "(unsigned int PEEK = peek( struct Stack* s )");}
+{ fprintf(output, "(unsigned int PEEk = peek( s )");}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 47 "transpiler.l"
-{ fprintf(output, "(unsigned int SIZE = size( struct Stack* ss )");}
+{ fprintf(output, "(unsigned int SIZE = size( s )");}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 48 "transpiler.l"
-{fprintf(output, "drop( struct Stack* s");}
+{fprintf(output, "drop( s");}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
@@ -881,7 +881,7 @@ YY_RULE_SETUP
 case 18:
 YY_RULE_SETUP
 #line 50 "transpiler.l"
-{fprintf(output, "debugenable( struct Stack* s");}
+{fprintf(output, "debugenable( s");}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP

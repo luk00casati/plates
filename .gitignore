@@ -1,5 +1,6 @@
 /examples
+.vscode
 a.out
 cpiatti.o
 libcpiatti.so
-#out.c
+out.c

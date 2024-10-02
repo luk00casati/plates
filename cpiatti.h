@@ -2,7 +2,7 @@
 #define CPIATTI_H
 
 #define STRING(s) #s
-#define SIGERRS STRING(SIGINT recived); 
+#define SIGERRS STRING(SIGINT recived)
 
 struct Stack {
   unsigned int *ptr;

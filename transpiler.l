@@ -9,21 +9,21 @@ const char* startheader = \
 #include <stdlib.h> \n \
 #include <signal.h> \n \
 \n \
-void transpiledcode(){ \n \
-struct Stack s; \n \
+void transpiledcode(struct Stack* s){ \n \
 init_stack(s);\n\n//stanspiledcode\n\n";
 
 const char* endheader = \
 "}\n\n//end\n\nvoid handle_signal(){ \n \
-deinit_stack(s); \n \
+//free stack \n \
 fprintf(stderr, SIGERRS); \n \
 exit(0); \n \
 } \n \
 \n \
 int main(){ \n \
+    struct Stack s; \n \
     signal(SIGINT, handle_signal); \n \
-    transpiledcode(); \n \
-    deinit_stack(s); \n \
+    transpiledcode(&s); \n \
+    deinit_stack(&s); \n \
     return 0; \n \
 }";
 

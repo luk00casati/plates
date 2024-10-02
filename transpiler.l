@@ -3,6 +3,7 @@
 bool repeat = false;
 bool iff = false;
 FILE* output = NULL;
+//int fileno(FILE *stream); //bad
 const char* startheader = \
 "#include <cpiatti.h> \n \
 #include <stdio.h> \n \
@@ -58,6 +59,7 @@ int main(){ \n \
 "!=" {fprintf(output, " != ");}
 ">" {fprintf(output, " > ");}
 "<" {fprintf(output, " < ");}
+"PUTNL" {fprintf(output, "printf( \n");}
 "DO" {if (repeat){fprintf(output, "; i++) {\n"); repeat = false;}
 else if (iff){fprintf(output, ") {"); iff = false; }
 else{fprintf(output, " {\n");} }
@@ -81,9 +83,9 @@ void transpile(const char* path ,const char* flag){
         }
     }
     else if ( strcmp(flag, "hidden") == 0){
-        output = fopen("/tmp/tempout.c", "w");
+        output = fopen("/tmp/temppiattiout.c", "w");
         if (output == NULL){
-            fprintf(stderr, "error opening /tmp/tempout.c\n");
+            fprintf(stderr, "error opening /tmp/temppiattiout.c\n");
             exit(1);
         }
     }

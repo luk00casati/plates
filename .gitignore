@@ -4,3 +4,5 @@ a.out
 cpiatti.o
 libcpiatti.so
 out.c
+lex.yy.c
+piatti

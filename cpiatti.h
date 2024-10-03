@@ -10,7 +10,7 @@ struct Stack {
   short int debugprint;
 };
 
-void transpile(const char* path ,const char* flag);
+void transpile(const char* path);
 void debugenable(struct Stack* s);
 void init_stack(struct Stack* s);
 void deinit_stack(struct Stack* s);

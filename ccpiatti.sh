@@ -1,5 +1,0 @@
-#!/bin/sh
-set -e
-cpiattict main.cpiatti
-clang-format -i out.c
-cc out.c -lcpiatti -O2

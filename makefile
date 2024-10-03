@@ -12,6 +12,7 @@ all:
 	@echo make library
 	@echo make transpiler
 	@echo make install
+	@echo make cleaninstall
 	@echo make remove
 
 object: $(SRC)
@@ -24,7 +25,7 @@ transpiler: transpiler.l piatti.c
 	@flex transpiler.l
 	@$(CC) lex.yy.c piatti.c -lfl $(CFLAGS) -D_XOPEN_SOURCE=700 -o $(TRANSPILER)
 
-install: library transpiler $(HH) $(TRANSPILER) $(LIB)
+install: library transpiler $(HH) $(LIB)
 	@cp $(LIB) /usr/lib
 	@cp $(HH) /usr/include/
 	@cp $(TRANSPILER) /usr/bin/
@@ -33,3 +34,5 @@ remove:
 	@rm /usr/lib/$(LIB)
 	@rm /usr/include/$(HH)
 	@rm /usr/bin/$(TRANSPILER)
+
+cleaninstall: remove install

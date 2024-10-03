@@ -68,31 +68,17 @@ else{fprintf(output, " {\n");} }
 . {fprintf(stderr, "error undefine chars/char: %s\n", yytext);exit(1);}
 %%
 
-void transpile(const char* path ,const char* flag){
+void transpile(const char* path){
     yyin = fopen(path, "r");
     if (yyin == NULL){
         fprintf(stderr, "error opening %s\n", path);
         exit(1);
     }
-
-    if ( strcmp(flag, "show") == 0){
-        output = fopen("out.c", "w");
-        if (output == NULL){
-            fprintf(stderr, "error opening out.c\n");
-            exit(1);
-        }
-    }
-    else if ( strcmp(flag, "hidden") == 0){
-        output = fopen("/tmp/temppiattiout.c", "w");
-        if (output == NULL){
-            fprintf(stderr, "error opening /tmp/temppiattiout.c\n");
-            exit(1);
-        }
-    }
-    else {
-        fprintf(stderr, "invalid arg transpile");
+    output = fopen("/tmp/temppiattiout.c", "w");
+    if (output == NULL){
+        fprintf(stderr, "error opening /tmp/temppiattiout.c\n");
         exit(1);
-        }
+    }
     fprintf(output, "%s", startheader);
     yylex();
     fclose(yyin);

@@ -1,35 +1,19 @@
-#include <cpiatti.h>
+#include "cpiatti.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 // cc default clang
 
-int uniquechar(const char* str)
-{
-    for (size_t i = 0; i < strlen(str) - 1; i++) {
-        for (size_t j = i + 1; j < strlen(str); j++) {
-            if (str[i] == str[j]) {
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
 int main(int argc, char** argv){
     int r = 0;
-    char* outputfile = NULL;
     if (argc < 2){
         fprintf(stderr, "error: too few armuments\n");
         exit(1);
     }
     if (argc == 2){
-        transpile(argv[1], "hidden");
+        transpile(argv[1]);
     }
-    if (argc == 3){
-        transpile(argv[2], "show");
-    }
-    if (argc > 3){
+    if (argc > 2){
         fprintf(stderr, "error: too many armuments\n");
         exit(1);
     }
@@ -38,7 +22,7 @@ int main(int argc, char** argv){
             fprintf(stderr, "error: compiling error\n");
             exit(1);
         }
-    r = system("clang /tmp/temppiattiout");
+    r = system("/tmp/temppiattiout");
         if (r == 1){
             fprintf(stderr, "error: executable error\n");
             exit(1);

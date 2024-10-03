@@ -40,7 +40,7 @@
 
 `PEEK` will store the value of the first item in the stack
 
-`PEEK` will store the value of the size of the stack
+`SIZE` will store the value of the size of the stack
 
 # examples:
 

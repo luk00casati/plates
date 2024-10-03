@@ -6,38 +6,21 @@
 
 `make install` probably use sudo
 
-# tools:
-
-`cpiattitc` the transpiler for the language compile to C 
-need a source file and name for the output file if not provided the output name will be out.c
-example `cpiattict main.cpiatti main.c`
-if you need to compile the C code, set the `-lcpiatti` flag
-
-there is a script named ccpiatti in the repo that will help you
-
 # all the key words:
 
 `DEBUG` will activate debug information
-
-`NOOUT` will deativate the stdout
 
 `POP` will remove the last item of the stack
 
 `PUSH` will add one item to the stack need a value
 
-`GETC` will ask for an input of a character and will put in the stack
-
-`GETS` need a string and will put the character of the string in the stack
-
-`GETI` will ask for an input of a digit and will put in the stack
-
-`STPOP` will remove the last item of the stack and store the value in STORE
-
 `ROT` will rotate the stack
 
 `PUT` will remove the last item of the stack and print the value
 
-`APUT` will remove the last item of the stack and print the ascii value
+`PUTC` will remove the last item of the stack and print the ascii value
+
+`PUTNL` will remove the last item of the stack and print new line
 
 `COPY` will copy the value of the last item of the stack and to the stack
 
@@ -55,54 +38,57 @@ there is a script named ccpiatti in the repo that will help you
 
 `DROP` will remove all the item from the stack
 
-`STPEEK` will store the value of the last item in the stack in STORE
+`PEEK` will store the value of the first item in the stack
+
+`PEEK` will store the value of the size of the stack
 
 # examples:
 
 fibonacci
 
 ```
-PUSH 1
-PUSH 2
+PUSH 1;
+PUSH 2;
 
-REPEAT 20 {
-    COPY
-    ROT
-    SUM
-}
+REPEAT 20 DO
+    COPY;
+    ROT;
+    SUM;
+END
 
-PUT
-EXIT 0
+PUT;
+PUTNL;
 ```
 
 upper
 
 ```
-GETS "hello" ROT
+PUSH 97
 
-REPEAT SIZE {
-    PUSH 32
-    SWAP
-    SUB
-    APUT
-}
-
-EXIT 0
+REPEAT SIZE DO
+    PUSH 32;
+    SWAP;
+    SUB;
+    PUTC;
+    PUTNL;
+END
 ```
 
 truth machine
 
 ```
-GETI STPOP
+PUSH 1; //or 0
 
-IF STORE == 0 {
-    PUSH 0 PUT
-}
-ELSE {
-    LOOP {
-        PUSH 1 PUT
-    }
-}
-
-EXIT 0
+IF POP == 0 DO
+    PUSH 0;
+    PUT;
+    PUTNL;
+END
+ELSE DO
+    LOOP DO
+        PUSH 1;
+        PUT;
+        PUTNL;
+    END
+END
 ```

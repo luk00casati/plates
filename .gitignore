@@ -5,4 +5,5 @@ cpiatti.o
 libcpiatti.so
 out.c
 lex.yy.c
+tmppiattiout.c
 piatti

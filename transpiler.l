@@ -1,31 +1,34 @@
 %{
 #include <stdbool.h>
-bool repeat = false;
+bool repeatf = false;
 bool iff = false;
 FILE* output = NULL;
 //int fileno(FILE *stream); //bad
 const char* startheader = \
-"#include <cpiatti.h> \n \
-#include <stdio.h> \n \
-#include <stdlib.h> \n \
-#include <signal.h> \n \
+"#include <cpiatti.h>\n \
+#include <stdio.h>\n \
+#include <stdlib.h>\n \
+#include <signal.h>\n \
+#include <unistd.h>\n \
+//global\n \
+struct Stack s;\n \
 \n \
-void transpiledcode(struct Stack* s){ \n \
+void transpiledcode(struct Stack* s){\n \
 init_stack(s);\n\n//stanspiledcode\n\n";
 
 const char* endheader = \
-"}\n\n//end\n\nvoid handle_signal(){ \n \
-//free stack \n \
-fprintf(stderr, SIGERRS); \n \
-exit(0); \n \
-} \n \
+"}\n\n//end\n\nvoid handle_signal(int sig) {\n \
+const char *msg = SIGERRS;\n \
+write(STDERR_FILENO, msg, sizeof(SIGERRS) - 1);\n \
+deinit_stack(&s);\n \
+_exit(1);\n \
+}\n \
 \n \
-int main(){ \n \
-    struct Stack s; \n \
-    signal(SIGINT, handle_signal); \n \
-    transpiledcode(&s); \n \
-    deinit_stack(&s); \n \
-    return 0; \n \
+int main(){\n \
+    signal(SIGINT, handle_signal);\n \
+    transpiledcode(&s);\n \
+    deinit_stack(&s);\n \
+    return 0;\n \
 }";
 
 %}
@@ -33,7 +36,7 @@ int main(){ \n \
 %%
 "PUSH" { fprintf(output,  "push( s," );}
 [0-9]+ { fprintf(output, " %s ", yytext);}
-"POP" { fprintf(output, "(unsigned int POP = pop( s )");}
+"POP" { fprintf(output, "pop( s )");}
 "ROT" {fprintf(output, "rot( s");}
 "PUT" {fprintf(output, "put( s");}
 "PUTC" {fprintf(output, "sputc( s");}
@@ -44,14 +47,16 @@ int main(){ \n \
 "MUL" {fprintf(output, "mul( s");}
 "SUM" {fprintf(output, "sum( s");}
 "REM" {fprintf(output, "rem( s");}
-"PEEK" { fprintf(output, "(unsigned int PEEk = peek( s )");}
-"SIZE" { fprintf(output, "(unsigned int SIZE = size( s )");}
+"PEEK" { fprintf(output, "peek( s )");}
+"SIZE" { fprintf(output, "size( s )");}
 "DROP" {fprintf(output, "drop( s");}
-"REPEAT" {fprintf(output, "for (unsigned int i = 0; i < "); repeat = true;}
+"REPEAT" {fprintf(output, "for (unsigned int i = 0; i < "); repeatf = true;}
 "DEBUG" {fprintf(output, "debugenable( s");}
 "LOOP" {fprintf(output, "while(1)");}
 "BREAK" {fprintf(output, "break");}
 "IF" {fprintf(output, "if ("); iff = true; }
+"ELIF" {fprintf(output, "else if ("); iff = true; }
+"ELSE" {fprintf(output, "else "); }
 ";" {fprintf(output, " );\n");}
 "==" {fprintf(output, " == ");}
 ">=" {fprintf(output, " >= ");}
@@ -60,8 +65,8 @@ int main(){ \n \
 ">" {fprintf(output, " > ");}
 "<" {fprintf(output, " < ");}
 "PUTNL" {fprintf(output, "printf( NL");}
-"DO" {if (repeat){fprintf(output, "; i++) {\n"); repeat = false;}
-else if (iff){fprintf(output, ") {"); iff = false; }
+"DO" {if (repeatf){fprintf(output, "; i++) {\n"); repeatf = false;}
+else if (iff){fprintf(output, ") {\n"); iff = false; }
 else{fprintf(output, " {\n");} }
 "END" {fprintf(output, " }\n");}
 "//".* { /* COMMENT */ }
@@ -75,9 +80,9 @@ void transpile(const char* path){
         fprintf(stderr, "error opening %s\n", path);
         exit(1);
     }
-    output = fopen("/tmp/temppiattiout.c", "w");
+    output = fopen("/tmp/tmppiattiout.c", "w");
     if (output == NULL){
-        fprintf(stderr, "error opening /tmp/temppiattiout.c\n");
+        fprintf(stderr, "error opening /tmp/tmppiattiout.c\n");
         exit(1);
     }
     fprintf(output, "%s", startheader);

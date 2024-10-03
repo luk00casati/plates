@@ -63,7 +63,7 @@ PUTNL;
 upper
 
 ```
-PUSH 97
+PUSH 97;
 
 REPEAT SIZE DO
     PUSH 32;

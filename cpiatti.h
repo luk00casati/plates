@@ -3,6 +3,7 @@
 
 #define STRING(s) #s
 #define SIGERRS STRING(SIGINT recived)
+#define NL "\n"
 
 struct Stack {
   unsigned int *ptr;

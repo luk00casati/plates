@@ -59,11 +59,12 @@ int main(){ \n \
 "!=" {fprintf(output, " != ");}
 ">" {fprintf(output, " > ");}
 "<" {fprintf(output, " < ");}
-"PUTNL" {fprintf(output, "printf( \n");}
+"PUTNL" {fprintf(output, "printf( NL");}
 "DO" {if (repeat){fprintf(output, "; i++) {\n"); repeat = false;}
 else if (iff){fprintf(output, ") {"); iff = false; }
 else{fprintf(output, " {\n");} }
 "END" {fprintf(output, " }\n");}
+"//".* { /* COMMENT */ }
 [ \t\n] { }
 . {fprintf(stderr, "error undefine chars/char: %s\n", yytext);exit(1);}
 %%

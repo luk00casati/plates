@@ -18,10 +18,16 @@ void printstack(std::stack<long> stack)
   }
 }
 
-void debugenable(void)
+void sdebugenable(void)
 {
   debugprint = true;
 }
+
+void sdebugdisable(void)
+{
+  debugprint = false;
+}
+
 
 void spush(std::stack<long> s, const long val)
 {

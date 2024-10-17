@@ -1,6 +1,6 @@
-CC = clang
-CFLAGS = -Wall -Wextra -O2 -std=c11 -pedantic 
-TRANSPILER = piatti
+CC = clang++
+CFLAGS = -Wall -Wextra -O2 -std=cpp11 -pedantic 
+TRANSPILER = plates
 OBJ = cpiatti.o
 SRC = cpiatti.c
 HH = cpiatti.h

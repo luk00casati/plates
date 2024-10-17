@@ -11,6 +11,8 @@ struct Stack {
   short int debugprint;
 };
 
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_RESET "\x1b[0m"
 void transpile(const char* path);
 void debugenable(struct Stack* s);
 void init_stack(struct Stack* s);

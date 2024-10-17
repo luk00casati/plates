@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include "cpiatti.h"
 
+void printred(char* str){
+  puts(ANSI_COLOR_RED);
+  puts(str);
+  puts(ANSI_COLOR_RESET);
+}
+
 void init_stack(struct Stack* s) {
   s->size = 0;
   s->ptr = NULL;
@@ -25,7 +31,7 @@ void deinit_stack(struct Stack* s) {
     if (s->ptr != NULL) {
       free(s->ptr);
     } else {
-      printf("WARMING NULL PTR ON DEINIT\nPANIC!!!\n");
+      printred("WARMING NULL PTR ON DEINIT\nPANIC!!!\n");
     }
   }
 }

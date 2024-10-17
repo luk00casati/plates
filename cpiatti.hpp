@@ -1,15 +1,14 @@
 #ifndef CPIATTI_H
 #define CPIATTI_H
 
+#include<stack>
+
 #define STRING(s) #s
 #define SIGERRS STRING(Error: signal received)
 #define NL "\n"
 
-struct Stack {
-  unsigned int *ptr;
-  unsigned int size;
-  short int debugprint;
-};
+std::stack<long> s;
+bool debugprint = false;
 
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"

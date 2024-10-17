@@ -6,7 +6,9 @@ SRC = cpiatti.c
 HH = cpiatti.h
 LIB = libcpiatti.so
 
-all:
+all: transpiler library
+
+help:
 	@echo command:
 	@echo make object
 	@echo make library

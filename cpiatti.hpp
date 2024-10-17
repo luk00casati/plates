@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 #include<stack>
 
@@ -11,7 +11,9 @@ bool debugprint = false;
 
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"
+extern "C" {
 void transpile(const char* path);
+}
 void sdebugenable(void);
 void sdebugdisable(void);
 void spush(std::stack<long> s, long val);

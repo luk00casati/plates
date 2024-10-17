@@ -1,9 +1,10 @@
-CC = clang++
-CFLAGS = -Wall -Wextra -O2 -std=cpp11 -pedantic 
+CC = clang
+CC++ = clang++
+CFLAGS = -Wall -Wextra -O2 -std=c++11 -pedantic 
 TRANSPILER = plates
 OBJ = cpiatti.o
-SRC = cpiatti.c
-HH = cpiatti.h
+SRC = cpiatti.cpp
+HH = cpiatti.hpp
 LIB = libcpiatti.so
 
 all: transpiler library
@@ -17,15 +18,18 @@ help:
 	@echo make cleaninstall
 	@echo make remove
 
+flex: transpiler.l
+	@flex transpiler.l
+
 object: $(SRC)
-	@$(CC) -fPIC -c $(SRC) $(CFLAGS)
+	@$(CC++) -fPIC -c $(SRC) $(CFLAGS)
+	@$(CC) -c lex.yy.c 
 
 library: object
-	@$(CC) -shared -o $(LIB) $(OBJ)
+	@$(CC++) -shared -o $(LIB) $(OBJ)
 
-transpiler: transpiler.l piatti.c
-	@flex transpiler.l
-	@$(CC) lex.yy.c piatti.c -lfl $(CFLAGS) -D_XOPEN_SOURCE=700 -o $(TRANSPILER)
+transpiler: $(SRC) flex
+	@$(CC++) lex.yy.o $(SRC) -lfl $(CFLAGS) -D_XOPEN_SOURCE=700 -o $(TRANSPILER)
 
 install: library transpiler $(HH) $(LIB)
 	@cp $(LIB) /usr/lib

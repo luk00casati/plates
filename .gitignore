@@ -1,9 +1,10 @@
 /examples
 .vscode
 a.out
-cpiatti.o
-libcpiatti.so
+*.o
+*.so
 out.c
 lex.yy.c
 tmppiattiout.c
 piatti
+plates

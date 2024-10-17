@@ -36,7 +36,7 @@ void spush(std::stack<long> s, const long val)
     s.push(val);
     if (debugprint)
     {
-      printf("DEBUG push: \n%d\n", val);
+      printf("DEBUG push: \n%ld\n", val);
     }
   }
 }
@@ -55,10 +55,11 @@ long spop(std::stack<long> s)
     s.pop();
     if (debugprint)
     {
-      printf("DEBUG pop: \n%d -> EMPTY\n", ret);
+      printf("DEBUG pop: \n%ld -> EMPTY\n", ret);
     }
     return ret;
   }
+  return 0;
 }
 
 void srot(std::stack<long> s)
@@ -96,11 +97,11 @@ void sput(std::stack<long> s)
   {
     if (debugprint)
     {
-      printf("DEBUG put: \n%d -> EMPTY\n", s.top());
+      printf("DEBUG put: \n%ld -> EMPTY\n", s.top());
     }
     if (!debugprint)
     { // no out
-      printf("%d", s.top());
+      printf("%ld", s.top());
     }
     s.pop();
   }
@@ -117,11 +118,11 @@ void sputc(std::stack<long> s)
   {
     if (debugprint)
     {
-      printf("DEBUG putc: \n%c -> EMPTY\n", s.top());
+      printf("DEBUG putc: \n%c -> EMPTY\n", static_cast<char>(s.top()));
     }
     if (!debugprint)
     { // no out
-      printf("%c", s.top());
+      printf("%c", static_cast<char>(s.top()));
     }
     s.pop();
   }
@@ -138,7 +139,7 @@ void scopy(std::stack<long> s)
   {
     if (debugprint)
     {
-      printf("DEBUG copy: %d\n", s.top());
+      printf("DEBUG copy: %ld\n", s.top());
     }
     s.push(s.top());
   }
@@ -178,7 +179,7 @@ void ssub(std::stack<long> s)
     long res = t1 - t2;
     if (debugprint)
     {
-      printf("sub: %d\n", res);
+      printf("sub: %ld\n", res);
     }
     s.push(res);
   }
@@ -200,7 +201,7 @@ void ssum(std::stack<long> s)
     long res = t1 + t2;
     if (debugprint)
     {
-      printf("sum: %d\n", res);
+      printf("sum: %ld\n", res);
     }
     s.push(res);
   }
@@ -222,7 +223,7 @@ void smol(std::stack<long> s)
     long res = t1 * t2;
     if (debugprint)
     {
-      printf("mol: %d\n", res);
+      printf("mol: %ld\n", res);
     }
     s.push(res);
   }
@@ -249,7 +250,7 @@ void sdiv(std::stack<long> s)
     long res = t1 / t2;
     if (debugprint)
     {
-      printf("div: %d\n", res);
+      printf("div: %ld\n", res);
     }
     s.push(res);
   }
@@ -276,7 +277,7 @@ void srem(std::stack<long> s)
     long res = t1 % t2;
     if (debugprint)
     {
-      printf("rem: %d\n", res);
+      printf("rem: %ld\n", res);
     }
     s.push(res);
   }
@@ -293,7 +294,7 @@ long speek(std::stack<long> s)
   {
     if (debugprint)
     {
-      printf("DEBUG peek: %d\n", s.top());
+      printf("DEBUG peek: %ld\n", s.top());
     }
   }
   return s.top();
@@ -303,7 +304,7 @@ long size(std::stack<long> s)
 {
   if (debugprint)
   {
-    printf("DEBUG size: %d\n", s.size());
+    printf("DEBUG size: %ld\n", s.size());
   }
   return s.size();
 }

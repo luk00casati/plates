@@ -5,6 +5,7 @@ enum regex_list {
     REGEX_DEBUGON,
     REGEX_DEBUGOFF,
     REGEX_REPEAT,
+    REGEX_BREAK,
     REGEX_END,
     REGEX_IF,
     REGEX_ELIF,
@@ -33,6 +34,8 @@ std::string regex_list_conv(enum regex_list value){
         return "\s*DEBUGOFF\s*\n";
     case REGEX_REPEAT:
         return "\s*REPEAT\s*(.*)\s*DO\s*\n";
+    case REGEX_BREAK:
+        return "\s*BREAK\s*\n";
     case REGEX_END:
         return "\s*END\s*\n";
     case REGEX_IF:

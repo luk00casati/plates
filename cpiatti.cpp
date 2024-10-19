@@ -8,7 +8,7 @@ void printred(const char *str)
   puts(ANSI_COLOR_RESET);
 }
 
-void printstack(std::stack<long> stack)
+void printstack(std::stack<long> &stack)
 {
   std::stack<long> d = stack;
   while (!d.empty())
@@ -29,7 +29,7 @@ void sdebugdisable(void)
 }
 
 
-void spush(std::stack<long> s, const long val)
+void spush(std::stack<long> &s, const long val)
 {
   if (s.empty())
   {
@@ -41,7 +41,7 @@ void spush(std::stack<long> s, const long val)
   }
 }
 
-long spop(std::stack<long> s)
+long spop(std::stack<long> &s)
 {
   long ret = 0;
   if (s.empty())
@@ -62,7 +62,7 @@ long spop(std::stack<long> s)
   return 0;
 }
 
-void srot(std::stack<long> s)
+void srot(std::stack<long> &s)
 {
   if (s.size() >= 2)
   {
@@ -86,7 +86,7 @@ void srot(std::stack<long> s)
   }
 }
 
-void sput(std::stack<long> s)
+void sput(std::stack<long> &s)
 {
   if (s.empty())
   {
@@ -107,7 +107,7 @@ void sput(std::stack<long> s)
   }
 }
 
-void sputc(std::stack<long> s)
+void sputc(std::stack<long> &s)
 {
   if (s.empty())
   {
@@ -128,7 +128,7 @@ void sputc(std::stack<long> s)
   }
 }
 
-void scopy(std::stack<long> s)
+void scopy(std::stack<long> &s)
 {
   if (s.empty())
   {
@@ -145,7 +145,7 @@ void scopy(std::stack<long> s)
   }
 }
 
-void sswap(std::stack<long> s)
+void sswap(std::stack<long> &s)
 {
   if (s.size() > 1)
   {
@@ -163,7 +163,7 @@ void sswap(std::stack<long> s)
   }
 }
 
-void ssub(std::stack<long> s)
+void ssub(std::stack<long> &s)
 {
   if (s.size() < 2)
   {
@@ -185,7 +185,7 @@ void ssub(std::stack<long> s)
   }
 }
 
-void ssum(std::stack<long> s)
+void ssum(std::stack<long> &s)
 {
   if (s.size() < 2)
   {
@@ -207,7 +207,7 @@ void ssum(std::stack<long> s)
   }
 }
 
-void smol(std::stack<long> s)
+void smol(std::stack<long> &s)
 {
   if (s.size() < 2)
   {
@@ -229,7 +229,7 @@ void smol(std::stack<long> s)
   }
 }
 
-void sdiv(std::stack<long> s)
+void sdiv(std::stack<long> &s)
 {
   if (s.size() < 2)
   {
@@ -256,7 +256,7 @@ void sdiv(std::stack<long> s)
   }
 }
 
-void srem(std::stack<long> s)
+void srem(std::stack<long> &s)
 {
   if (s.size() < 2)
   {
@@ -283,7 +283,7 @@ void srem(std::stack<long> s)
   }
 }
 
-long speek(std::stack<long> s)
+long speek(std::stack<long> &s)
 {
   if (s.empty())
   {
@@ -300,7 +300,7 @@ long speek(std::stack<long> s)
   return s.top();
 }
 
-long size(std::stack<long> s)
+long size(std::stack<long> &s)
 {
   if (debugprint)
   {
@@ -309,7 +309,7 @@ long size(std::stack<long> s)
   return s.size();
 }
 
-void drop(std::stack<long> s)
+void drop(std::stack<long> &s)
 {
   if (debugprint)
   {

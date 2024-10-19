@@ -3,8 +3,5 @@
 a.out
 *.o
 *.so
-out.c
-lex.yy.c
-tmppiattiout.c
 piatti
 plates

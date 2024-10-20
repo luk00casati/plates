@@ -28,8 +28,16 @@
 #define REGEX_REM 19
 #define REGEX_DROP 20
 #define REGEX_EMPTYLINE 21
+#define REGEX_POP 22
+#define REGEX_LOOP 23
 
-#define REGEX_LIST_SIZE 22
+#define REGEX_LIST_SIZE 24
+
+#define END_IF 0
+#define END_ELIF 1
+#define END_ELSE 2
+#define END_REPEAT 3
+#define END_LOOP 4
 
 std::stack<long> s;
 bool debugprint = false;

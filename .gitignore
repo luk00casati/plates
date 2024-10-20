@@ -3,5 +3,6 @@
 a.out
 *.o
 *.so
+*.irpiatti
 piatti
 plates

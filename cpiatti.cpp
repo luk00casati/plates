@@ -41,9 +41,8 @@ void spush(std::stack<long> &s, const long val)
   }
 }
 
-long spop(std::stack<long> &s)
+void spop(std::stack<long> &s)
 {
-  long ret = 0;
   if (s.empty())
   {
     printred("ERROR pop on empty stack\n");
@@ -51,15 +50,12 @@ long spop(std::stack<long> &s)
   }
   if (!s.empty())
   {
-    ret = s.top();
-    s.pop();
     if (debugprint)
     {
-      printf("DEBUG pop: \n%ld -> EMPTY\n", ret);
+      printf("DEBUG pop: \n%ld\n", s.top());
     }
-    return ret;
+    s.pop();
   }
-  return 0;
 }
 
 void srot(std::stack<long> &s)
@@ -207,7 +203,7 @@ void ssum(std::stack<long> &s)
   }
 }
 
-void smol(std::stack<long> &s)
+void smul(std::stack<long> &s)
 {
   if (s.size() < 2)
   {
@@ -283,7 +279,7 @@ void srem(std::stack<long> &s)
   }
 }
 
-long speek(std::stack<long> &s)
+long stop(std::stack<long> &s)
 {
   if (s.empty())
   {
@@ -300,7 +296,7 @@ long speek(std::stack<long> &s)
   return s.top();
 }
 
-long size(std::stack<long> &s)
+long ssize(std::stack<long> &s)
 {
   if (debugprint)
   {
@@ -309,7 +305,7 @@ long size(std::stack<long> &s)
   return s.size();
 }
 
-void drop(std::stack<long> &s)
+void sdrop(std::stack<long> &s)
 {
   if (debugprint)
   {

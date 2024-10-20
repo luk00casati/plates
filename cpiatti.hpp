@@ -3,10 +3,33 @@
 #include<stack>
 
 #define STRING(s) #s
-#define SIGERRS STRING(Error: signal received)
-#define NL "\n"
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"
+
+#define REGEX_DEBUGON 0
+#define REGEX_DEBUGOFF 1
+#define REGEX_REPEAT 2
+#define REGEX_BREAK 3
+#define REGEX_END 4
+#define REGEX_IF 5
+#define REGEX_ELIF 6
+#define REGEX_ELSE 7
+#define REGEX_PUSH 8
+#define REGEX_ROT 9
+#define REGEX_PUT 10
+#define REGEX_PUTC 11
+#define REGEX_PUTNL 12
+#define REGEX_COPY 13
+#define REGEX_SWAP 14
+#define REGEX_SUM 15
+#define REGEX_SUB 16
+#define REGEX_MUL 17
+#define REGEX_DIV 18
+#define REGEX_REM 19
+#define REGEX_DROP 20
+#define REGEX_EMPTYLINE 21
+
+#define REGEX_LIST_SIZE 22
 
 std::stack<long> s;
 bool debugprint = false;
@@ -14,7 +37,7 @@ bool debugprint = false;
 void sdebugenable(void);
 void sdebugdisable(void);
 void spush(std::stack<long> &s, long val);
-long spop(std::stack<long> &s);
+void spop(std::stack<long> &s);
 void srot(std::stack<long> &s);
 void sput(std::stack<long> &s);
 void sputc(std::stack<long> &s); 
@@ -25,6 +48,6 @@ void ssub(std::stack<long> &s);
 void ssum(std::stack<long> &s);
 void smul(std::stack<long> &s);
 void srem(std::stack<long> &s);
-long speek(std::stack<long> &s);
+long stop(std::stack<long> &s);
 long ssize(std::stack<long> &s);
 void sdrop(std::stack<long> &s);

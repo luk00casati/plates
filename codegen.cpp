@@ -2,8 +2,8 @@
 #include <regex>
 #include <iostream>
 #include <array>
-
-#define REGEX_LIST_SIZE 21
+#include <fstream>
+#include "cpiatti.hpp"
 
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DEBUGON\s*\n)"),      // Pattern 0: DEBUGON
@@ -27,6 +27,7 @@ std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DIV\s*\n)"),          // Pattern 18: DIV
     std::regex(R"(\s*REM\s*\n)"),          // Pattern 19: REM
     std::regex(R"(\s*DROP\s*\n)"),         // Pattern 20: DROP
+    std::regex(R"(\s*\n)"),                // Pattern 21: EMPTYLINE
 };
 
 std::pair<bool, int> regex_in_list(const std::string str){
@@ -41,12 +42,24 @@ std::pair<bool, int> regex_in_list(const std::string str){
 }
 
 int main(){
-    std::string str = "PUSH 10\n";
-    std::pair<bool, int> res = regex_in_list(str);
+    std::string filename = "examples/test.piatti"; 
+    std::ifstream file(filename);       
+
+    if (!file.is_open()) {
+        std::cerr << "Could not open the file: " << filename << std::endl;
+        return 1;  
+    }
+
+    std::string line;
+    while (std::getline(file, line)) {
+            std::pair<bool, int> res = regex_in_list(line+'\n');
         if (res.first){
             std::cout << "match found: " << res.second << std::endl;
         }
         else{
             std::cout << "match not found" << std::endl;
         }
+    }
+    
+    file.close();
 }

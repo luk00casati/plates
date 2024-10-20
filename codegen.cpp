@@ -9,13 +9,21 @@
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DEBUGON\s*\n)"),      // Pattern 0: DEBUGON
     std::regex(R"(\s*DEBUGOFF\s*\n)"),     // Pattern 1: DEBUGOFF
-    std::regex(R"(\s*REPEAT\s+(.*)\s+DO\s*\n)"), // Pattern 2: REPEAT
+    std::regex(
+    R"(\s*REPEAT\s+((SIZE|TOP|\d+)\s+(\+|\-|\*|\\|\%)\s+(SIZE|TOP|\d+)|\d+)\s+DO\s*\n)"
+    ), // Pattern 2: REPEAT
     std::regex(R"(\s*BREAK\s*\n)"),        // Pattern 3: BREAK
     std::regex(R"(\s*END\s*\n)"),          // Pattern 4: END
-    std::regex(R"(\s*IF\s+(.*)\s+DO\s*\n)"), // Pattern 5: IF
-    std::regex(R"(\s*ELIF\s+(.*)\s+DO\s*\n)"), // Pattern 6: ELIF
+    std::regex(
+    R"(\s*IF\s+((SIZE|TOP|\d+)\s+(\==|\!=|\<|\>|\<=|\>=)\s+(SIZE|TOP|\d+)|\d+)\s+DO\s*\n)"
+    ), // Pattern 5: IF
+    std::regex(
+    R"(\s*ELIF\s+((SIZE|TOP|\d+)\s+(\==|\!=|\<|\>|\<=|\>=)\s+(SIZE|TOP|\d+)|\d+)\s+DO\s*\n)"
+    ), // Pattern 6: ELIF
     std::regex(R"(\s*ELSE\s+DO\s*\n)"),    // Pattern 7: ELSE
-    std::regex(R"(\s*PUSH\s+(.*)\s*\n)"), // Pattern 8: PUSH
+    std::regex(
+    R"(\s*PUSH\s+((SIZE|TOP|\d+)\s+(\+|\-|\*|\\|\%)\s+(SIZE|TOP|\d+)|\d+)\s*\n)"
+    ), // Pattern 8: PUSH
     std::regex(R"(\s*ROT\s*\n)"),          // Pattern 9: ROT
     std::regex(R"(\s*PUT\s*\n)"),          // Pattern 10: PUT
     std::regex(R"(\s*PUTC\s*\n)"),         // Pattern 11: PUTC

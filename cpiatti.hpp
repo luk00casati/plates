@@ -1,6 +1,8 @@
-#pragma once
+#ifndef CPIATTI_HPP
+#define CPIATTI_HPP
 
 #include<stack>
+#include<string>
 
 #define STRING(s) #s
 #define ANSI_COLOR_RED "\x1b[31m"
@@ -39,11 +41,12 @@
 #define END_REPEAT 3
 #define END_LOOP 4
 
-std::stack<long> s;
-bool debugprint = false;
+//std::stack<long> s;
+//bool debugprint = false;
 
-void sdebugenable(void);
-void sdebugdisable(void);
+//cpiatti.cpp
+extern bool debugprint;
+void sdebugbool(bool b);
 void spush(std::stack<long> &s, long val);
 void spop(std::stack<long> &s);
 void srot(std::stack<long> &s);
@@ -59,3 +62,8 @@ void srem(std::stack<long> &s);
 long stop(std::stack<long> &s);
 long ssize(std::stack<long> &s);
 void sdrop(std::stack<long> &s);
+
+//codegen.cpp
+void genir(const std::string inputfilename, const std::string outputfilename);
+
+#endif

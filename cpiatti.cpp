@@ -1,6 +1,8 @@
 #include <iostream>
 #include "cpiatti.hpp"
 
+bool debugprint = false;
+
 void printred(const char *str)
 {
   puts(ANSI_COLOR_RED);
@@ -18,16 +20,15 @@ void printstack(std::stack<long> &stack)
   }
 }
 
-void sdebugenable(void)
+void sdebugbool(bool b)
 {
-  debugprint = true;
+  if (b){
+    debugprint = true;
+  }
+  if (!b){
+    debugprint = false;
+  }
 }
-
-void sdebugdisable(void)
-{
-  debugprint = false;
-}
-
 
 void spush(std::stack<long> &s, const long val)
 {

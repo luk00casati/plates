@@ -10,7 +10,7 @@ std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DEBUGON\s*\n)"),      // Pattern 0: DEBUGON
     std::regex(R"(\s*DEBUGOFF\s*\n)"),     // Pattern 1: DEBUGOFF
     std::regex(
-    R"(\s*REPEAT\s+((SIZE|TOP|\d+)\s+(\+|\-|\*|\\|\%)\s+(SIZE|TOP|\d+)|\d+)\s+DO\s*\n)"
+    R"(\s*REPEAT\s+((SIZE|TOP|\d+)\s+(\+|\-|\*|\\|\%)\s+(SIZE|TOP|\d+)|(SIZE|TOP|\d+))\s+DO\s*\n)"
     ), // Pattern 2: REPEAT
     std::regex(R"(\s*BREAK\s*\n)"),        // Pattern 3: BREAK
     std::regex(R"(\s*END\s*\n)"),          // Pattern 4: END
@@ -21,9 +21,7 @@ std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     R"(\s*ELIF\s+((SIZE|TOP|\d+)\s+(\==|\!=|\<|\>|\<=|\>=)\s+(SIZE|TOP|\d+)|\d+)\s+DO\s*\n)"
     ), // Pattern 6: ELIF
     std::regex(R"(\s*ELSE\s+DO\s*\n)"),    // Pattern 7: ELSE
-    std::regex(
-    R"(\s*PUSH\s+((SIZE|TOP|\d+)\s+(\+|\-|\*|\\|\%)\s+(SIZE|TOP|\d+)|\d+)\s*\n)"
-    ), // Pattern 8: PUSH
+    std::regex(R"(\s*PUSH\s+(\d+)\s*\n)"), // Pattern 8: PUSH
     std::regex(R"(\s*ROT\s*\n)"),          // Pattern 9: ROT
     std::regex(R"(\s*PUT\s*\n)"),          // Pattern 10: PUT
     std::regex(R"(\s*PUTC\s*\n)"),         // Pattern 11: PUTC
@@ -52,26 +50,35 @@ std::pair<bool, int> regex_in_list(const std::string str){
     return ret;
 }
 
-int main(){
-    std::string inputfilename = "examples/test.piatti"; 
+void closeanddeletefile(std::ofstream &wfile, const std::string str){
+    if (wfile.is_open()){
+        wfile.close();
+        remove(str.c_str());
+    }
+    else{
+        std::cout << "file already closed" << std::endl;
+    }
+}
+
+void genir(const std::string inputfilename, const std::string outputfilename){
     std::ifstream inputfile(inputfilename);    
-    std::string outputfilename = "output.irpiatti";
     std::ofstream  outputfile(outputfilename);
 
     if (!inputfile.is_open()) {
         std::cerr << "Could not open the file: " << inputfilename << std::endl;
-        return 1;  
+        exit(1);
     }
 
     if (!outputfile.is_open()) {
         std::cerr << "Could not open the file: " << outputfilename << std::endl;
-        return 1;  
+        exit(1);
     }
 
     std::string line;
     std::smatch Match;
     std::stack<int> end_type;
     unsigned long linenumber = 0;
+    //outputfile << "MAINSTART;" << std::endl;
     while (std::getline(inputfile, line)) {
         std::string linenl = line+'\n';
         std::pair<bool, int> res = regex_in_list(linenl);
@@ -86,7 +93,6 @@ int main(){
                 }
                 else{
                     std::cout << "invalid PUSH arg" << std::endl;
-                    return 1;
                 }
             
             case REGEX_REPEAT:
@@ -97,7 +103,6 @@ int main(){
                 }
                 else{
                     std::cout << "invalid REPEAT arg" << std::endl;
-                    return 1;
                 }
 
             case REGEX_COPY:
@@ -115,7 +120,6 @@ int main(){
             case REGEX_END:
                 if (end_type.empty()){
                     std::cout << "ERROR END miss match" << std::endl;
-                    return 1; 
                 }
                 else{
                 switch (end_type.top())
@@ -150,8 +154,20 @@ int main(){
                 outputfile << "PUT;" << std::endl;
                 break;
 
+            case REGEX_PUTC:
+                outputfile << "PUTC;" << std::endl;
+                break;
+
             case REGEX_PUTNL:
                 outputfile << "PUTNL;" << std::endl;
+                break;
+
+            case REGEX_SWAP:
+                outputfile << "SWAP;" << std::endl;
+                break;
+
+            case REGEX_SUB:
+                outputfile << "SUB;" << std::endl;
                 break;
 
             case REGEX_EMPTYLINE:
@@ -159,19 +175,21 @@ int main(){
                 break;
             
             default:
-                std::cout << "invalid regex code" << std::endl;
+                std::cout << "invalid regex code " << linenumber <<
+                ": " << res.second << std::endl;
                 break;
             }
         }
         else{
             std::cout << "match not found on line " << linenumber << ": " << std::endl;
             std::cout << line << std::endl;
-            return 1;
+            closeanddeletefile(outputfile, outputfilename);
+            inputfile.close();
+            exit(1);
         }
         linenumber++;
     }
-    
+    outputfile << "EXIT;";
     inputfile.close();
     outputfile.close();
-    return 0;
 }

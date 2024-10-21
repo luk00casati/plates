@@ -1,4 +1,5 @@
 .vscode
+builddir
 a.out
 *.o
 *.so

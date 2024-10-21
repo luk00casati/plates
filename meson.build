@@ -6,28 +6,28 @@ project('plates', 'cpp',
 # Detect if we're cross-compiling for Windows
 is_windows = host_machine.system() == 'windows'
 
+if not is_windows
+  add_project_link_arguments(
+    '-static',
+    '-static-libgcc',
+    '-static-libstdc++',
+    language : 'cpp'
+  )
+endif
+
 # Define the source files
 src_files = [
-  'codegen.cpp',
-  'cpiatti.cpp',
-  'main.cpp',
+  'src/codegen.cpp',
+  'src/cpiatti.cpp',
+  'src/main.cpp',
 ]
 
-# Define the headers files
-head_files = [
-    'cpiatti.hpp',
-]
 # Include directory for headers
-inc_dir = include_directories(head_files)
-
-# Set any Windows-specific compiler arguments
-if is_windows
-  add_project_arguments('-DWIN32', language : 'cpp')
-endif
+inc_dir = include_directories('inc')
 
 # Set executable name based on system
 if is_windows
-  exe_name = 'plates.exe'
+  exe_name = 'plates'
 else
   exe_name = 'plates.elf'
 endif

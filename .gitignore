@@ -1,9 +1,2 @@
 .vscode
 builddir
-a.out
-*.o
-*.so
-*.irpiatti
-*.pch
-piatti
-plates

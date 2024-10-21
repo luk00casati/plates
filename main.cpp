@@ -13,8 +13,7 @@ int main(int argc, char** argv){
     }
     if (argc == 2){
     std::string inputfilename = argv[1]; 
-    std::string outputfilename = "output.irpiatti";
-    genir(inputfilename, outputfilename);
+    genir(inputfilename);
     }
     return 0;
 }

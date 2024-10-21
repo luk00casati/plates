@@ -5,7 +5,11 @@
 #include <stack>
 #include <fstream>
 #include <algorithm>
+#include <vector>
 #include "cpiatti.hpp"
+
+std::vector<int> codesection;
+std::vector<std::string> datasection;
 
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DEBUGON\s*)"),      // Pattern 0: DEBUGON
@@ -65,6 +69,7 @@ std::string removespace(std::string str){
     return str;
 }
 
+/*
 void closeanddeletefile(std::ofstream &wfile, const std::string str){
     if (wfile.is_open()){
         wfile.close();
@@ -74,20 +79,23 @@ void closeanddeletefile(std::ofstream &wfile, const std::string str){
         std::cout << "file already closed" << std::endl;
     }
 }
+*/
 
-void genir(const std::string inputfilename, const std::string outputfilename){
+void genir(const std::string inputfilename){
     std::ifstream inputfile(inputfilename);    
-    std::ofstream  outputfile(outputfilename);
+    //std::ofstream  outputfile(outputfilename);
 
     if (!inputfile.is_open()) {
         std::cerr << "Could not open the file: " << inputfilename << std::endl;
         exit(1);
     }
 
+    /*
     if (!outputfile.is_open()) {
         std::cerr << "Could not open the file: " << outputfilename << std::endl;
         exit(1);
     }
+    */
 
     std::string line;
     std::smatch Match;
@@ -103,56 +111,69 @@ void genir(const std::string inputfilename, const std::string outputfilename){
             {
             case REGEX_PUSH:
                 std::regex_search(line, Match, regex_patterns[REGEX_PUSH]);
-                outputfile << OP_PUSH << "," << Match.str(1) << std::endl;
+                //outputfile << OP_PUSH << "," << Match.str(1) << std::endl;
+                codesection.push_back(OP_PUSH);
+                datasection.push_back(Match.str(1));
                 break;
             
             case REGEX_REPEAT:
                 std::regex_search(line, Match, regex_patterns[REGEX_REPEAT]);
                 M = removespace(Match.str(1));
-                outputfile << OP_REPEAT << "," << M << std::endl;
+                //outputfile << OP_REPEAT << "," << M << std::endl;
+                codesection.push_back(OP_REPEAT);
+                datasection.push_back(M);
                 end_type.push(END_REPEAT);
                 break;
 
             case REGEX_IF:
                 std::regex_search(line, Match, regex_patterns[REGEX_IF]);
                 M = removespace(Match.str(1));
-                outputfile << OP_IF << "," << M << std::endl;
+                //outputfile << OP_IF << "," << M << std::endl;
+                codesection.push_back(OP_IF);
+                datasection.push_back(M);
                 end_type.push(END_IF);
                 break;
 
             case REGEX_ELIF:
                 std::regex_search(line, Match, regex_patterns[REGEX_ELIF]);
                 M = removespace(Match.str(1));
-                outputfile << OP_ELIF << "," << M << std::endl;
+                //outputfile << OP_ELIF << "," << M << std::endl;
+                codesection.push_back(OP_ELIF);
+                datasection.push_back(M);
                 end_type.push(END_ELIF);
                 break;
 
             case REGEX_ELSE:
-                outputfile << OP_ELSE << std::endl;
+                //outputfile << OP_ELSE << std::endl;
+                codesection.push_back(OP_ELSE);
                 end_type.push(END_ELSE);
                 break;
 
             case REGEX_LOOP:
-                outputfile << OP_LOOP << std::endl;
+                //outputfile << OP_LOOP << std::endl;
+                codesection.push_back(OP_LOOP);
                 end_type.push(END_LOOP);
                 break;
 
             case REGEX_COPY:
-                outputfile << OP_COPY << std::endl;
+                //outputfile << OP_COPY << std::endl;
+                codesection.push_back(OP_COPY);
                 break;
 
             case REGEX_ROT:
-                outputfile << OP_ROT << std::endl;
+                //outputfile << OP_ROT << std::endl;
+                codesection.push_back(OP_ROT);
                 break;
             
             case REGEX_SUM:
-                outputfile << OP_SUM << std::endl;
+                //outputfile << OP_SUM << std::endl;
+                codesection.push_back(OP_SUM);
                 break;
 
             case REGEX_END:
                 if (end_type.empty()){
                     std::cout << "ERROR END miss match" << std::endl;
-                    closeanddeletefile(outputfile, outputfilename);
+                    //closeanddeletefile(outputfile, outputfilename);
                     inputfile.close();
                     exit(1);
                 }
@@ -160,23 +181,28 @@ void genir(const std::string inputfilename, const std::string outputfilename){
                 switch (end_type.top())
                 {
                 case END_REPEAT:
-                    outputfile << OP_ENDREPEAT << std::endl;
+                    //outputfile << OP_ENDREPEAT << std::endl;
+                    codesection.push_back(OP_ENDREPEAT);
                     break;
                 
                 case END_LOOP:
-                    outputfile << OP_ENDLOOP << std::endl;
+                    //outputfile << OP_ENDLOOP << std::endl;
+                    codesection.push_back(OP_ENDLOOP);
                     break;
 
                 case END_IF:
-                    outputfile << OP_ENDIF << std::endl;
+                    //outputfile << OP_ENDIF << std::endl;
+                    codesection.push_back(OP_ENDIF);
                     break;
 
                 case END_ELIF:
-                    outputfile << OP_ENDELIF << std::endl;
+                    //outputfile << OP_ENDELIF << std::endl;
+                    codesection.push_back(OP_ELIF);
                     break;
 
                 case END_ELSE:
-                    outputfile << OP_ENDELSE << std::endl;
+                    //outputfile << OP_ENDELSE << std::endl;
+                    codesection.push_back(OP_ELSE);
                     break;
 
                 default:
@@ -187,23 +213,28 @@ void genir(const std::string inputfilename, const std::string outputfilename){
                 }
 
             case REGEX_PUT:
-                outputfile << OP_PUT << std::endl;
+                //outputfile << OP_PUT << std::endl;
+                codesection.push_back(OP_PUT);
                 break;
 
             case REGEX_PUTC:
-                outputfile << OP_PUTC << std::endl;
+                //outputfile << OP_PUTC << std::endl;
+                codesection.push_back(OP_PUTC);
                 break;
 
             case REGEX_PUTNL:
-                outputfile << OP_PUTNL << std::endl;
+                //outputfile << OP_PUTNL << std::endl;
+                codesection.push_back(OP_PUTNL);
                 break;
 
             case REGEX_SWAP:
-                outputfile << OP_SWAP << std::endl;
+                //outputfile << OP_SWAP << std::endl;
+                codesection.push_back(OP_SWAP);
                 break;
 
             case REGEX_SUB:
-                outputfile << OP_SUB << std::endl;
+                //outputfile << OP_SUB << std::endl;
+                codesection.push_back(OP_SUB);
                 break;
 
             case REGEX_EMPTYLINE:
@@ -219,7 +250,7 @@ void genir(const std::string inputfilename, const std::string outputfilename){
         else{
             std::cout << "match not found on line " << linenumber << ": " << std::endl;
             std::cout << line << std::endl;
-            closeanddeletefile(outputfile, outputfilename);
+            //closeanddeletefile(outputfile, outputfilename);
             inputfile.close();
             exit(1);
         }
@@ -227,13 +258,13 @@ void genir(const std::string inputfilename, const std::string outputfilename){
     }
     if (!end_type.empty()){
         std::cout << "ERROR END miss match" << std::endl;
-        closeanddeletefile(outputfile, outputfilename);
+        //closeanddeletefile(outputfile, outputfilename);
         inputfile.close();
         exit(1);
     }
-    
-    outputfile << OP_EXIT;
+
+    //outputfile << OP_EXIT;
     inputfile.close();
-    outputfile.close();
+    //outputfile.close();
     std::cout << "ir generated" << std::endl;
 }

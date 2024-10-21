@@ -2,9 +2,15 @@
 
 [stack reference](https://en.wikipedia.org/wiki/Stack_(abstract_data_type))
 
-# installation:
+# compilation:
 
-`make install` probably use sudo
+`meson setup builddir`
+`meson compile -C builddir`
+
+cross-compile
+
+`meson setup builddir --cross-file windows-cross.ini`
+`meson compile -C builddir`
 
 # all the key words:
 

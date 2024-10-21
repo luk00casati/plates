@@ -1,5 +1,4 @@
-#ifndef CPIATTI_HPP
-#define CPIATTI_HPP
+#pragma once
 
 #include<stack>
 #include<string>
@@ -70,7 +69,6 @@
 #define OP_ENDELSE 25
 #define OP_ENDREPEAT 26
 #define OP_ENDLOOP 27
-#define OP_EXIT 28
 
 //std::stack<long> s;
 //bool debugprint = false;
@@ -95,6 +93,4 @@ long ssize(std::stack<long> &s);
 void sdrop(std::stack<long> &s);
 
 //codegen.cpp
-void genir(const std::string inputfilename, const std::string outputfilename);
-
-#endif
+void genir(const std::string inputfilename);

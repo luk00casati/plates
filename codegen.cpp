@@ -103,50 +103,50 @@ void genir(const std::string inputfilename, const std::string outputfilename){
             {
             case REGEX_PUSH:
                 std::regex_search(line, Match, regex_patterns[REGEX_PUSH]);
-                outputfile << "PUSH," << Match.str(1) << ';' << std::endl;
+                outputfile << OP_PUSH << "," << Match.str(1) << std::endl;
                 break;
             
             case REGEX_REPEAT:
                 std::regex_search(line, Match, regex_patterns[REGEX_REPEAT]);
                 M = removespace(Match.str(1));
-                outputfile << "REPEAT," << M << ';' << std::endl;
+                outputfile << OP_REPEAT << "," << M << std::endl;
                 end_type.push(END_REPEAT);
                 break;
 
             case REGEX_IF:
                 std::regex_search(line, Match, regex_patterns[REGEX_IF]);
                 M = removespace(Match.str(1));
-                outputfile << "IF," << M << ';' << std::endl;
+                outputfile << OP_IF << "," << M << std::endl;
                 end_type.push(END_IF);
                 break;
 
             case REGEX_ELIF:
                 std::regex_search(line, Match, regex_patterns[REGEX_ELIF]);
                 M = removespace(Match.str(1));
-                outputfile << "ELIF," << M << ';' << std::endl;
+                outputfile << OP_ELIF << "," << M << std::endl;
                 end_type.push(END_ELIF);
                 break;
 
             case REGEX_ELSE:
-                outputfile << "ELSE;" << std::endl;
+                outputfile << OP_ELSE << std::endl;
                 end_type.push(END_ELSE);
                 break;
 
             case REGEX_LOOP:
-                outputfile << "LOOP;" << std::endl;
+                outputfile << OP_LOOP << std::endl;
                 end_type.push(END_LOOP);
                 break;
 
             case REGEX_COPY:
-                outputfile << "COPY;" << std::endl;
+                outputfile << OP_COPY << std::endl;
                 break;
 
             case REGEX_ROT:
-                outputfile << "ROT;" << std::endl;
+                outputfile << OP_ROT << std::endl;
                 break;
             
             case REGEX_SUM:
-                outputfile << "SUM;" << std::endl;
+                outputfile << OP_SUM << std::endl;
                 break;
 
             case REGEX_END:
@@ -160,49 +160,50 @@ void genir(const std::string inputfilename, const std::string outputfilename){
                 switch (end_type.top())
                 {
                 case END_REPEAT:
-                    outputfile << "ENDREPEAT;" << std::endl;
+                    outputfile << OP_ENDREPEAT << std::endl;
                     break;
                 
                 case END_LOOP:
-                    outputfile << "ENDLOOP;" << std::endl;
+                    outputfile << OP_ENDLOOP << std::endl;
                     break;
 
                 case END_IF:
-                    outputfile << "ENDIF;" << std::endl;
+                    outputfile << OP_ENDIF << std::endl;
                     break;
 
                 case END_ELIF:
-                    outputfile << "ENDELIF;" << std::endl;
+                    outputfile << OP_ENDELIF << std::endl;
                     break;
 
                 case END_ELSE:
-                    outputfile << "ENDELSE;" << std::endl;
+                    outputfile << OP_ENDELSE << std::endl;
                     break;
 
                 default:
                     std::cout << "invalid end type" << std::endl;
                     break;
                 }
+                end_type.pop();
                 }
 
             case REGEX_PUT:
-                outputfile << "PUT;" << std::endl;
+                outputfile << OP_PUT << std::endl;
                 break;
 
             case REGEX_PUTC:
-                outputfile << "PUTC;" << std::endl;
+                outputfile << OP_PUTC << std::endl;
                 break;
 
             case REGEX_PUTNL:
-                outputfile << "PUTNL;" << std::endl;
+                outputfile << OP_PUTNL << std::endl;
                 break;
 
             case REGEX_SWAP:
-                outputfile << "SWAP;" << std::endl;
+                outputfile << OP_SWAP << std::endl;
                 break;
 
             case REGEX_SUB:
-                outputfile << "SUB;" << std::endl;
+                outputfile << OP_SUB << std::endl;
                 break;
 
             case REGEX_EMPTYLINE:
@@ -224,7 +225,14 @@ void genir(const std::string inputfilename, const std::string outputfilename){
         }
         linenumber++;
     }
-    outputfile << "EXIT;";
+    if (!end_type.empty()){
+        std::cout << "ERROR END miss match" << std::endl;
+        closeanddeletefile(outputfile, outputfilename);
+        inputfile.close();
+        exit(1);
+    }
+    
+    outputfile << OP_EXIT;
     inputfile.close();
     outputfile.close();
     std::cout << "ir generated" << std::endl;

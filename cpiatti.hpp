@@ -42,6 +42,36 @@
 #define END_REPEAT 3
 #define END_LOOP 4
 
+#define OP_DEBUGON 0
+#define OP_DEBUGOFF 1
+#define OP_REPEAT 2
+#define OP_BREAK 3
+#define OP_END 4
+#define OP_IF 5
+#define OP_ELIF 6
+#define OP_ELSE 7
+#define OP_PUSH 8
+#define OP_ROT 9
+#define OP_PUT 10
+#define OP_PUTC 11
+#define OP_PUTNL 12
+#define OP_COPY 13
+#define OP_SWAP 14
+#define OP_SUM 15
+#define OP_SUB 16
+#define OP_MUL 17
+#define OP_DIV 18
+#define OP_REM 19
+#define OP_DROP 20
+#define OP_POP 21
+#define OP_LOOP 22
+#define OP_ENDIF 23
+#define OP_ENDELIF 24
+#define OP_ENDELSE 25
+#define OP_ENDREPEAT 26
+#define OP_ENDLOOP 27
+#define OP_EXIT 28
+
 //std::stack<long> s;
 //bool debugprint = false;
 

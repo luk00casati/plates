@@ -1,0 +1,14 @@
+PUSH 1 #or 0
+
+IF TOP == 0 DO
+    PUSH 0
+    PUT
+    PUTNL
+END
+ELSE DO
+    LOOP DO
+        PUSH 1
+        PUT
+        PUTNL
+    END
+END

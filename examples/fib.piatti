@@ -1,0 +1,11 @@
+PUSH 1
+PUSH 2
+
+REPEAT 20 DO
+    COPY
+    ROT
+    SUM
+END
+
+PUT
+PUTNL

@@ -1,0 +1,9 @@
+PUSH 97
+
+REPEAT SIZE DO
+    PUSH 32
+    SWAP
+    SUB
+    PUTC
+    PUTNL
+END

@@ -50,7 +50,7 @@ END
 truth machine
 
 ```
-PUSH 1; #or 0
+PUSH 1 #or 0
 
 IF POP == 0 DO
     PUSH 0

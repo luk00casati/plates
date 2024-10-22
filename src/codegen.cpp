@@ -8,10 +8,6 @@
 #include <vector>
 #include "cpiatti.hpp"
 
-std::vector<int> codesection;
-std::vector<std::string> datasection;
-std::stack<int> end_type;
-
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DEBUGON\s*)"),  // Pattern 0: DEBUGON
     std::regex(R"(\s*DEBUGOFF\s*)"), // Pattern 1: DEBUGOFF
@@ -85,14 +81,15 @@ void closeanddeletefile(std::ofstream &wfile, const std::string str){
 }
 */
 
-int handle_end_type(std::ifstream &inputfile)
+int handle_end_type(std::stack<int> &end_type,
+                    std::vector<int> &codesection)
 {
     if (end_type.empty())
     {
-        std::cout << "ERROR END miss match" << std::endl;
+        //std::cout << "ERROR END miss match" << std::endl;
         // closeanddeletefile(outputfile, outputfilename);
-        inputfile.close();
-        return 0;
+        // inputfile.close();
+        return 1;
         // exit(1);
     }
     else
@@ -131,13 +128,15 @@ int handle_end_type(std::ifstream &inputfile)
 
         default:
             std::cout << "invalid end type" << std::endl;
-            break;
+            return 1;
         }
     }
     return 0;
 }
 
-int genir(const std::string inputfilename)
+int genir(const std::string inputfilename,   
+        std::vector<int> &codesection,
+        std::vector<std::string> &datasection)
 {
     std::ifstream inputfile(inputfilename);
     // std::ofstream  outputfile(outputfilename);
@@ -156,6 +155,7 @@ int genir(const std::string inputfilename)
     }
     */
 
+    std::stack<int> end_type;
     std::string line;
     std::smatch Match;
     std::string M;
@@ -216,8 +216,14 @@ int genir(const std::string inputfilename)
                 break;
 
             case REGEX_END:
-                handle_end_type(inputfile);
+                if (handle_end_type(end_type, codesection) == 0){
                 break;
+                }
+                else {
+                    std::cout << "ERROR END miss match" << std::endl;
+                    inputfile.close();
+                    return 1;
+                }
 
             case REGEX_COPY:
                 // outputfile << OP_COPY << std::endl;

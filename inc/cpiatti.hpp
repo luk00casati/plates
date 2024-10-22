@@ -1,7 +1,8 @@
 #pragma once
 
-#include<stack>
-#include<string>
+#include <stack>
+#include <string>
+#include <vector>
 
 #define STRING(s) #s
 #define ANSI_COLOR_RED "\x1b[31m"
@@ -94,4 +95,6 @@ long ssize(std::stack<long> &s);
 void sdrop(std::stack<long> &s);
 
 //codegen.cpp
-int genir(const std::string inputfilename);
+int genir(const std::string inputfilename,   
+        std::vector<int> &codesection,
+        std::vector<std::string> &datasection);

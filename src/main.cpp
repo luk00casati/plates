@@ -1,6 +1,7 @@
 #include "cpiatti.hpp"
 #include <string>
 #include <iostream>
+#include <vector>
 
 int main(int argc, char **argv)
 {
@@ -18,7 +19,9 @@ int main(int argc, char **argv)
     {
         std::string inputfilename = argv[1];
         int ret = 0;
-        ret = genir(inputfilename);
+        std::vector<int> codesection;
+        std::vector<std::string> datasection;
+        ret = genir(inputfilename, codesection, datasection);
         if (ret == 0)
         {
             std::cout << "ir generated" << std::endl;

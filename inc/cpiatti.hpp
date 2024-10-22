@@ -69,6 +69,7 @@
 #define OP_ENDELSE 25
 #define OP_ENDREPEAT 26
 #define OP_ENDLOOP 27
+#define OP_EXIT 28
 
 //std::stack<long> s;
 //bool debugprint = false;

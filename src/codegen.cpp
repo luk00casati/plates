@@ -264,6 +264,7 @@ void genir(const std::string inputfilename){
     }
 
     //outputfile << OP_EXIT;
+    codesection.push_back(OP_EXIT);
     inputfile.close();
     //outputfile.close();
     std::cout << "ir generated" << std::endl;

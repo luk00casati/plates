@@ -94,4 +94,4 @@ long ssize(std::stack<long> &s);
 void sdrop(std::stack<long> &s);
 
 //codegen.cpp
-void genir(const std::string inputfilename);
+int genir(const std::string inputfilename);

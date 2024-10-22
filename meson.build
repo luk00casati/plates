@@ -1,6 +1,10 @@
 project('plates', 'cpp',
   version : '0.1',
-  default_options : ['cpp_std=c++11']  # Set C++ standard
+  default_options : [
+    'cpp_std=c++11', # Set C++ standard
+    'warning_level=3', # warming
+    'buildtype=debugoptimized', # Set optimizer
+  ]
 )
 
 # Detect if we're cross-compiling for Windows

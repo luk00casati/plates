@@ -22,10 +22,12 @@ void printstack(std::stack<long> &stack)
 
 void sdebugbool(bool b)
 {
-  if (b){
+  if (b)
+  {
     debugprint = true;
   }
-  if (!b){
+  if (!b)
+  {
     debugprint = false;
   }
 }
@@ -301,7 +303,7 @@ long ssize(std::stack<long> &s)
 {
   if (debugprint)
   {
-    printf("DEBUG size: %ld\n", s.size());
+    printf("DEBUG size: %ld\n", static_cast<long>(s.size()));
   }
   return s.size();
 }

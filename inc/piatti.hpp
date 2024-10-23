@@ -73,33 +73,34 @@
 #define OP_ENDLOOP 27
 #define OP_EXIT 28
 
-//std::stack<long> s;
-//bool debugprint = false;
-
 //cpiatti.cpp
-extern bool debugprint;
-void sdebugbool(bool b);
-void spush(std::stack<long> &s, long val);
-void spop(std::stack<long> &s);
-void srot(std::stack<long> &s);
-void sput(std::stack<long> &s);
-void sputc(std::stack<long> &s); 
-void sdiv(std::stack<long> &s); 
-void scopy(std::stack<long> &s);
-void sswap(std::stack<long> &s);
-void ssub(std::stack<long> &s);
-void ssum(std::stack<long> &s);
-void smul(std::stack<long> &s);
-void srem(std::stack<long> &s);
-long stop(std::stack<long> &s);
-long ssize(std::stack<long> &s);
-void sdrop(std::stack<long> &s);
+void spush(std::stack<long> &s, long val, bool debugprint);
+void spop(std::stack<long> &s, bool debugprint);
+void srot(std::stack<long> &s, bool debugprint);
+void sput(std::stack<long> &s, bool debugprint);
+void sputc(std::stack<long> &s, bool debugprint); 
+void sdiv(std::stack<long> &s, bool debugprint); 
+void scopy(std::stack<long> &s, bool debugprint);
+void sswap(std::stack<long> &s, bool debugprint);
+void ssub(std::stack<long> &s, bool debugprint);
+void ssum(std::stack<long> &s, bool debugprint);
+void smul(std::stack<long> &s, bool debugprint);
+void srem(std::stack<long> &s, bool debugprint);
+long stop(std::stack<long> &s, bool debugprint);
+long ssize(std::stack<long> &s, bool debugprint);
+void sdrop(std::stack<long> &s, bool debugprint);
 
 //codegen.cpp
 int genir(const std::string inputfilename,   
 std::vector<int> &codesection,
 std::vector<std::string> &datasection);
 
-std::vector<std::shared_ptr<std::string>> gen_ptrtable(
-std::vector<int> &codesection,
-std::vector<std::string> &datasection);
+std::vector<std::pair<int, int>> gen_pairtable(
+std::vector<int> &codesection);
+
+int get_offset(std::vector<std::pair<int, int>> pairtable,const int val);
+
+//vmpiatti.cpp
+void vmrun(std::vector<int> codesection,
+std::vector<std::string> datasection,
+std::vector<std::pair<int, int>> pairtable);

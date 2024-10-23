@@ -1,7 +1,5 @@
 #include <iostream>
-#include "cpiatti.hpp"
-
-bool debugprint = false;
+#include "piatti.hpp"
 
 void printred(const char *str)
 {
@@ -20,19 +18,7 @@ void printstack(std::stack<long> &stack)
   }
 }
 
-void sdebugbool(bool b)
-{
-  if (b)
-  {
-    debugprint = true;
-  }
-  if (!b)
-  {
-    debugprint = false;
-  }
-}
-
-void spush(std::stack<long> &s, const long val)
+void spush(std::stack<long> &s, const long val, bool debugprint)
 {
   if (s.empty())
   {
@@ -44,7 +30,7 @@ void spush(std::stack<long> &s, const long val)
   }
 }
 
-void spop(std::stack<long> &s)
+void spop(std::stack<long> &s, bool debugprint)
 {
   if (s.empty())
   {
@@ -61,7 +47,7 @@ void spop(std::stack<long> &s)
   }
 }
 
-void srot(std::stack<long> &s)
+void srot(std::stack<long> &s, bool debugprint)
 {
   if (s.size() >= 2)
   {
@@ -85,7 +71,7 @@ void srot(std::stack<long> &s)
   }
 }
 
-void sput(std::stack<long> &s)
+void sput(std::stack<long> &s, bool debugprint)
 {
   if (s.empty())
   {
@@ -106,7 +92,7 @@ void sput(std::stack<long> &s)
   }
 }
 
-void sputc(std::stack<long> &s)
+void sputc(std::stack<long> &s, bool debugprint)
 {
   if (s.empty())
   {
@@ -127,7 +113,7 @@ void sputc(std::stack<long> &s)
   }
 }
 
-void scopy(std::stack<long> &s)
+void scopy(std::stack<long> &s, bool debugprint)
 {
   if (s.empty())
   {
@@ -144,7 +130,7 @@ void scopy(std::stack<long> &s)
   }
 }
 
-void sswap(std::stack<long> &s)
+void sswap(std::stack<long> &s, bool debugprint)
 {
   if (s.size() > 1)
   {
@@ -154,6 +140,9 @@ void sswap(std::stack<long> &s)
     s.pop();
     s.push(t1);
     s.push(t2);
+    if(debugprint){
+      printf("swapped: %ld %ld\n", t1, t2);
+    }
   }
   else
   {
@@ -162,7 +151,7 @@ void sswap(std::stack<long> &s)
   }
 }
 
-void ssub(std::stack<long> &s)
+void ssub(std::stack<long> &s, bool debugprint)
 {
   if (s.size() < 2)
   {
@@ -184,7 +173,7 @@ void ssub(std::stack<long> &s)
   }
 }
 
-void ssum(std::stack<long> &s)
+void ssum(std::stack<long> &s, bool debugprint)
 {
   if (s.size() < 2)
   {
@@ -206,7 +195,7 @@ void ssum(std::stack<long> &s)
   }
 }
 
-void smul(std::stack<long> &s)
+void smul(std::stack<long> &s, bool debugprint)
 {
   if (s.size() < 2)
   {
@@ -228,7 +217,7 @@ void smul(std::stack<long> &s)
   }
 }
 
-void sdiv(std::stack<long> &s)
+void sdiv(std::stack<long> &s, bool debugprint)
 {
   if (s.size() < 2)
   {
@@ -255,7 +244,7 @@ void sdiv(std::stack<long> &s)
   }
 }
 
-void srem(std::stack<long> &s)
+void srem(std::stack<long> &s, bool debugprint)
 {
   if (s.size() < 2)
   {
@@ -282,7 +271,7 @@ void srem(std::stack<long> &s)
   }
 }
 
-long stop(std::stack<long> &s)
+long stop(std::stack<long> &s, bool debugprint)
 {
   if (s.empty())
   {
@@ -299,7 +288,7 @@ long stop(std::stack<long> &s)
   return s.top();
 }
 
-long ssize(std::stack<long> &s)
+long ssize(std::stack<long> &s, bool debugprint)
 {
   if (debugprint)
   {
@@ -308,7 +297,7 @@ long ssize(std::stack<long> &s)
   return s.size();
 }
 
-void sdrop(std::stack<long> &s)
+void sdrop(std::stack<long> &s, bool debugprint)
 {
   if (debugprint)
   {

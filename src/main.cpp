@@ -1,4 +1,4 @@
-#include "cpiatti.hpp"
+#include "piatti.hpp"
 #include <string>
 #include <iostream>
 #include <vector>
@@ -22,26 +22,32 @@ int main(int argc, char **argv)
         int ret = 0;
         std::vector<int> codesection;
         std::vector<std::string> datasection;
-        std::vector<std::shared_ptr<std::string>> ptrtable;
+        std::vector<std::pair<int, int>> pairtable;
         ret = genir(inputfilename, codesection, datasection);
         if (ret == 0)
         {
             std::cout << "ir generated" << std::endl;
+            std::cout << "code" << std::endl;
+            for (const auto& code : codesection) {
+                 std::cout << code << std::endl;
+            }
+            std::cout << "data" << std::endl;
+            for (const auto& data : datasection) {
+                 std::cout << data << std::endl;
+            }
+
         }
         else
         {
             std::cout << "ir error" << std::endl;
             return 1;
         }
-        ptrtable = gen_ptrtable(codesection, datasection);
+        pairtable = gen_pairtable(codesection);
         std::cout << "table generated" << std::endl;
-        for (const auto& ptr : ptrtable) {
-        if (ptr) {
-            std::cout << *ptr << std::endl; 
-        } else {
-            std::cout << "nullptr" << std::endl; 
+        for (const auto& pair : pairtable) {
+            std::cout << pair.first << " " << pair.second << std::endl; 
         }
-    }
+        vmrun(codesection, datasection, pairtable);
     }
     return 0;
 }

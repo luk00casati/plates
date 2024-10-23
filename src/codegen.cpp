@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <vector>
 #include <memory>
-#include "cpiatti.hpp"
+#include "piatti.hpp"
 
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DEBUGON\s*)"),  // Pattern 0: DEBUGON
@@ -70,11 +70,11 @@ std::string removespace(std::string str)
     return str;
 }
 
-std::vector<std::shared_ptr<std::string>> gen_ptrtable(
-    std::vector<int> &codesection,
-    std::vector<std::string> &datasection)
+std::vector<std::pair<int, int>> gen_pairtable(
+    std::vector<int> &codesection)
 {
-    std::vector<std::shared_ptr<std::string>> ptrvec;
+    std::vector<std::pair<int, int>> vec;
+    size_t data = 0;
       for (size_t i = 0; i < codesection.size(); i++)
     {
         switch (codesection[i])
@@ -83,15 +83,26 @@ std::vector<std::shared_ptr<std::string>> gen_ptrtable(
         case OP_REPEAT:
         case OP_IF:
         case OP_ELIF:
-            ptrvec.push_back(std::make_shared<std::string>(datasection[i]));
+            //ptrvec.push_back(std::make_shared<std::string>(datasection[i]));
+            vec.push_back({i,data});
+            data++;
             break;
 
         default:
-            ptrvec.push_back(nullptr);
+            //ptrvec.push_back(nullptr);
             break;
         }
     }
-    return ptrvec;
+    return vec;
+}
+
+int get_offset(std::vector<std::pair<int, int>> pairtable,const int val){
+    for(auto&pair: pairtable){
+        if (pair.first == val){
+            return pair.second;
+        }
+    }
+    return -1;
 }
 
 int handle_end_type(std::stack<int> &end_type,

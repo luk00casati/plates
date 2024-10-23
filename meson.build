@@ -23,6 +23,7 @@ endif
 src_files = [
   'src/codegen.cpp',
   'src/cpiatti.cpp',
+  'src/vmpiatti.cpp',
   'src/main.cpp',
 ]
 

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
+#include <memory>
 #include "cpiatti.hpp"
 
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
@@ -69,26 +70,38 @@ std::string removespace(std::string str)
     return str;
 }
 
-/*
-void closeanddeletefile(std::ofstream &wfile, const std::string str){
-    if (wfile.is_open()){
-        wfile.close();
-        remove(str.c_str());
+std::vector<std::shared_ptr<std::string>> gen_ptrtable(
+    std::vector<int> &codesection,
+    std::vector<std::string> &datasection)
+{
+    std::vector<std::shared_ptr<std::string>> ptrvec;
+      for (size_t i = 0; i < codesection.size(); i++)
+    {
+        switch (codesection[i])
+        {
+        case OP_PUSH:
+        case OP_REPEAT:
+        case OP_IF:
+        case OP_ELIF:
+            ptrvec.push_back(std::make_shared<std::string>(datasection[i]));
+            break;
+
+        default:
+            ptrvec.push_back(nullptr);
+            break;
+        }
     }
-    else{
-        std::cout << "file already closed" << std::endl;
-    }
+    return ptrvec;
 }
-*/
 
 int handle_end_type(std::stack<int> &end_type,
                     std::vector<int> &codesection)
 {
     if (end_type.empty())
     {
-        //std::cout << "ERROR END miss match" << std::endl;
-        // closeanddeletefile(outputfile, outputfilename);
-        // inputfile.close();
+        // std::cout << "ERROR END miss match" << std::endl;
+        //  closeanddeletefile(outputfile, outputfilename);
+        //  inputfile.close();
         return 1;
         // exit(1);
     }
@@ -134,9 +147,9 @@ int handle_end_type(std::stack<int> &end_type,
     return 0;
 }
 
-int genir(const std::string inputfilename,   
-        std::vector<int> &codesection,
-        std::vector<std::string> &datasection)
+int genir(const std::string inputfilename,
+          std::vector<int> &codesection,
+          std::vector<std::string> &datasection)
 {
     std::ifstream inputfile(inputfilename);
     // std::ofstream  outputfile(outputfilename);
@@ -216,10 +229,12 @@ int genir(const std::string inputfilename,
                 break;
 
             case REGEX_END:
-                if (handle_end_type(end_type, codesection) == 0){
-                break;
+                if (handle_end_type(end_type, codesection) == 0)
+                {
+                    break;
                 }
-                else {
+                else
+                {
                     std::cout << "ERROR END miss match" << std::endl;
                     inputfile.close();
                     return 1;

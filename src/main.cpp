@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 int main(int argc, char **argv)
 {
@@ -21,6 +22,7 @@ int main(int argc, char **argv)
         int ret = 0;
         std::vector<int> codesection;
         std::vector<std::string> datasection;
+        std::vector<std::shared_ptr<std::string>> ptrtable;
         ret = genir(inputfilename, codesection, datasection);
         if (ret == 0)
         {
@@ -29,7 +31,17 @@ int main(int argc, char **argv)
         else
         {
             std::cout << "ir error" << std::endl;
+            return 1;
         }
+        ptrtable = gen_ptrtable(codesection, datasection);
+        std::cout << "table generated" << std::endl;
+        for (const auto& ptr : ptrtable) {
+        if (ptr) {
+            std::cout << *ptr << std::endl; 
+        } else {
+            std::cout << "nullptr" << std::endl; 
+        }
+    }
     }
     return 0;
 }

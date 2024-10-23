@@ -3,6 +3,7 @@
 #include <stack>
 #include <string>
 #include <vector>
+#include <memory>
 
 #define STRING(s) #s
 #define ANSI_COLOR_RED "\x1b[31m"
@@ -96,5 +97,9 @@ void sdrop(std::stack<long> &s);
 
 //codegen.cpp
 int genir(const std::string inputfilename,   
-        std::vector<int> &codesection,
-        std::vector<std::string> &datasection);
+std::vector<int> &codesection,
+std::vector<std::string> &datasection);
+
+std::vector<std::shared_ptr<std::string>> gen_ptrtable(
+std::vector<int> &codesection,
+std::vector<std::string> &datasection);

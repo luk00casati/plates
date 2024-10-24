@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <memory>
+#include <stack>
 
 int main(int argc, char **argv)
 {
@@ -23,6 +23,7 @@ int main(int argc, char **argv)
         std::vector<int> codesection;
         std::vector<std::string> datasection;
         std::vector<std::pair<int, int>> pairtable;
+        std::stack<long> s;
         ret = genir(inputfilename, codesection, datasection);
         if (ret == 0)
         {
@@ -47,7 +48,7 @@ int main(int argc, char **argv)
         for (const auto& pair : pairtable) {
             std::cout << pair.first << " " << pair.second << std::endl; 
         }
-        vmrun(codesection, datasection, pairtable);
+        vmrun(s, codesection, datasection, pairtable);
     }
     return 0;
 }

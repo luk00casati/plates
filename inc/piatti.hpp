@@ -3,7 +3,6 @@
 #include <stack>
 #include <string>
 #include <vector>
-#include <memory>
 
 #define STRING(s) #s
 #define ANSI_COLOR_RED "\x1b[31m"
@@ -98,9 +97,10 @@ std::vector<std::string> &datasection);
 std::vector<std::pair<int, int>> gen_pairtable(
 std::vector<int> &codesection);
 
-int get_offset(std::vector<std::pair<int, int>> pairtable,const int val);
+int get_offset(std::vector<std::pair<int, int>> &pairtable, const int val);
 
 //vmpiatti.cpp
-void vmrun(std::vector<int> codesection,
-std::vector<std::string> datasection,
-std::vector<std::pair<int, int>> pairtable);
+void vmrun(std::stack<long> &s,
+std::vector<int> &codesection,
+std::vector<std::string> &datasection,
+std::vector<std::pair<int, int>> &pairtable);

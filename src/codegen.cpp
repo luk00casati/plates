@@ -4,9 +4,7 @@
 #include <array>
 #include <stack>
 #include <fstream>
-#include <algorithm>
 #include <vector>
-#include <memory>
 #include "piatti.hpp"
 
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
@@ -96,7 +94,7 @@ std::vector<std::pair<int, int>> gen_pairtable(
     return vec;
 }
 
-int get_offset(std::vector<std::pair<int, int>> pairtable,const int val){
+int get_offset(std::vector<std::pair<int, int>> &pairtable,const int val){
     for(auto&pair: pairtable){
         if (pair.first == val){
             return pair.second;

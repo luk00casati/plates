@@ -20,14 +20,11 @@ void printstack(std::stack<long> &stack)
 
 void spush(std::stack<long> &s, const long val, bool debugprint)
 {
-  if (s.empty())
-  {
     s.push(val);
     if (debugprint)
     {
       printf("DEBUG push: \n%ld\n", val);
     }
-  }
 }
 
 void spop(std::stack<long> &s, bool debugprint)

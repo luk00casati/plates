@@ -28,6 +28,7 @@ int main(int argc, char **argv)
         if (ret == 0)
         {
             std::cout << "ir generated" << std::endl;
+            /*
             std::cout << "code" << std::endl;
             for (const auto& code : codesection) {
                  std::cout << code << std::endl;
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
             for (const auto& data : datasection) {
                  std::cout << data << std::endl;
             }
-
+            */
         }
         else
         {
@@ -45,9 +46,11 @@ int main(int argc, char **argv)
         }
         pairtable = gen_pairtable(codesection);
         std::cout << "table generated" << std::endl;
+        /*
         for (const auto& pair : pairtable) {
             std::cout << pair.first << " " << pair.second << std::endl; 
         }
+        */
         vmrun(s, codesection, datasection, pairtable);
     }
     return 0;

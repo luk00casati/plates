@@ -3,48 +3,41 @@
 #include <string>
 #include "piatti.hpp"
 
-void print_stack(const std::stack<long>& s) {
-    std::stack<long> temp = s;  
-    std::cout << "Stack (top -> bottom): ";
-    while (!temp.empty()) {
-        std::cout << temp.top() << " ";  
-        temp.pop();  
-    }
-    std::cout << std::endl;
-}
-
 void vmrun(std::stack<long> &s,
-        std::vector<int> &codesection,
-        std::vector<std::string> &datasection,
-        std::vector<std::pair<int, int>> &pairtable){
-            bool ifflag = false;
-            bool elifflag = false;
-            bool loopflag = false;
-            bool repeatflag = false;
-            bool debugprint = false;
-            int offset = 0;
-            std::string data;
+           std::vector<int> &codesection,
+           std::vector<std::string> &datasection,
+           std::vector<std::pair<int, int>> &pairtable)
+{
+        bool ifflag = false;
+        bool elifflag = false;
+        bool loopflag = false;
+        bool repeatflag = false;
+        bool debugprint = false;
+        int offset = 0;
+        std::string data;
 
-            size_t i = 0;
-            bool run = true;
-            while(run){
-                if ( i >= codesection.size()){
+        size_t i = 0;
+        bool run = true;
+        while (run)
+        {
+                if (i >= codesection.size())
+                {
                         std::cout << "reaching end codesetion" << std::endl;
                         break;
                 }
                 int inst = codesection[i];
-                std::cout << "instruction " << inst << " i: " << i << std::endl;
+                // std::cout << "instruction " << inst << " i: " << i << std::endl;
 
-                print_stack(s);
+                // printstack(s);
 
                 switch (inst)
                 {
                 case OP_PUSH:
                         offset = get_offset(pairtable, i);
                         data = datasection[offset];
-                        //std::cout << data << std::endl;
+                        // std::cout << data << std::endl;
                         spush(s, stol(data), debugprint);
-                        //std::cout << "hey" << std::endl;
+                        // std::cout << "hey" << std::endl;
                         break;
 
                 case OP_SWAP:
@@ -66,16 +59,12 @@ void vmrun(std::stack<long> &s,
                 case OP_EXIT:
                         run = false;
                         break;
-                
+
                 default:
                         std::cout << "unsupport or invalid instrution: " << inst << std::endl;
                         break;
                 }
 
-
-
-
-
                 i++;
-            }
         }
+}

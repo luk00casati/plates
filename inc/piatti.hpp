@@ -73,6 +73,7 @@
 #define OP_EXIT 28
 
 //cpiatti.cpp
+void printstack(std::stack<long> &stack);
 void spush(std::stack<long> &s, long val, bool debugprint);
 void spop(std::stack<long> &s, bool debugprint);
 void srot(std::stack<long> &s, bool debugprint);

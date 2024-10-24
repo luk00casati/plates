@@ -8,23 +8,26 @@ void printred(const char *str)
   puts(ANSI_COLOR_RESET);
 }
 
+//no opcode
 void printstack(std::stack<long> &stack)
 {
   std::stack<long> d = stack;
   while (!d.empty())
   {
+    std::cout << "print stack stack start" << std::endl;
     std::cout << d.top() << std::endl;
     d.pop();
   }
+  std::cout << "print stack stack end" << std::endl;
 }
 
 void spush(std::stack<long> &s, const long val, bool debugprint)
 {
-    s.push(val);
-    if (debugprint)
-    {
-      printf("DEBUG push: \n%ld\n", val);
-    }
+  s.push(val);
+  if (debugprint)
+  {
+    printf("DEBUG push: \n%ld\n", val);
+  }
 }
 
 void spop(std::stack<long> &s, bool debugprint)
@@ -65,6 +68,10 @@ void srot(std::stack<long> &s, bool debugprint)
   else
   {
     // null
+    if (debugprint)
+    {
+      printf("rotated: NULL\n");
+    }
   }
 }
 
@@ -79,7 +86,7 @@ void sput(std::stack<long> &s, bool debugprint)
   {
     if (debugprint)
     {
-      printf("DEBUG put: \n%ld -> EMPTY\n", s.top());
+      printf("DEBUG put: \n%ld\n", s.top());
     }
     if (!debugprint)
     { // no out
@@ -100,7 +107,7 @@ void sputc(std::stack<long> &s, bool debugprint)
   {
     if (debugprint)
     {
-      printf("DEBUG putc: \n%c -> EMPTY\n", static_cast<char>(s.top()));
+      printf("DEBUG putc: \n%c\n", static_cast<char>(s.top()));
     }
     if (!debugprint)
     { // no out
@@ -137,14 +144,20 @@ void sswap(std::stack<long> &s, bool debugprint)
     s.pop();
     s.push(t1);
     s.push(t2);
-    if(debugprint){
+    if (debugprint)
+    {
       printf("swapped: %ld %ld\n", t1, t2);
     }
   }
   else
   {
-    printred("ERROR swap on stack size <= 1\n");
-    exit(1);
+    //printred("ERROR swap on stack size <= 1\n");
+    //exit(1);
+    //null
+    if (debugprint)
+    {
+      printf("swapped: NULL\n");
+    }
   }
 }
 
@@ -298,7 +311,7 @@ void sdrop(std::stack<long> &s, bool debugprint)
 {
   if (debugprint)
   {
-    printf("DEBUG drop:\nEMPTY\n");
+    printf("DEBUG drop: EMPTY\n");
   }
   while (!s.empty())
   {

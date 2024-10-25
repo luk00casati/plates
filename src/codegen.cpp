@@ -271,6 +271,14 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
                     // NULL
                     break;
 
+                case REGEX_DEBUGON:
+                    codesection.push_back(OP_DEBUGON);
+                    break;
+
+                case REGEX_DEBUGOFF:
+                    codesection.push_back(OP_DEBUGOFF);
+                    break;
+
                 default:
                     std::cout << "invalid regex code on line " << linenumber
                               << " REGEX_CODE: " << res.second << std::endl;

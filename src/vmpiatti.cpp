@@ -22,7 +22,8 @@ int jumpbackto(std::vector<int> codesection, const int index, const int inst) {
     return -1;
 }
 
-int jumpforwardto(std::vector<int> codesection, const int index, const int inst) {
+int jumpforwardto(std::vector<int> codesection, const int index,
+                  const int inst) {
     for (int i = 0; i < index; i++) {
         if (codesection[i] == inst) {
             return i;
@@ -30,7 +31,6 @@ int jumpforwardto(std::vector<int> codesection, const int index, const int inst)
     }
     return -1;
 }
-
 
 void vmrun(std::stack<long> &s, std::vector<int> &codesection,
            std::vector<std::string> &datasection,
@@ -55,7 +55,6 @@ void vmrun(std::stack<long> &s, std::vector<int> &codesection,
         // std::cout << "instruction " << inst << " i: " << i << std::endl;
 
         // printstack(s);
-        //std::cout << "repeat: "<<repeatn << std::endl;
 
         switch (inst) {
             case OP_PUSH:
@@ -84,7 +83,7 @@ void vmrun(std::stack<long> &s, std::vector<int> &codesection,
             case OP_DEBUGON:
                 debugprint = true;
                 break;
-            
+
             case OP_DEBUGOFF:
                 debugprint = false;
                 break;
@@ -126,31 +125,33 @@ void vmrun(std::stack<long> &s, std::vector<int> &codesection,
                 data = datasection[offset];
                 if (isstrdigits(data)) {
                     repeatn = stol(data);
-                }
-                else if (data.compare("SIZE") == 0){
-                  repeatn = ssize(s, debugprint);
-                }
-                else if (data.compare("TOP") == 0){
-                  repeatn = stop(s, debugprint);
-                }
-                else {
+                } else if (data.compare("SIZE") == 0) {
+                    repeatn = ssize(s, debugprint);
+                } else if (data.compare("TOP") == 0) {
+                    repeatn = stop(s, debugprint);
+                } else {
                     std::cout << "no impl: " << data << std::endl;
                 }
-                if (repeatn == 0){
-                  jump = jumpforwardto(codesection, i, OP_ENDREPEAT);
+                if (repeatn == 0) {
+                    jump = jumpforwardto(codesection, i, OP_ENDREPEAT);
+                    if (jump != -1) {
+                        i = jump;
+                    } else {
+                        std::cout << "error on jump repeat" << std::endl;
+                    }
                 }
                 break;
 
             case OP_ENDREPEAT:
-                if (repeatn == 0){/*null*/}
-                else if (repeatn != 1) {
+                if (repeatn == 0) { /*null*/
+                } else if (repeatn != 1) {
                     jump = jumpbackto(codesection, i, OP_REPEAT);
-                    if (jump != -1){
-                    i = jump;
-                    //std::cout << "jump: " << i << std::endl;
-                    repeatn--;
-                    }else{
-                      std::cout << "error on jump endrepeat" << std::endl;
+                    if (jump != -1) {
+                        i = jump;
+                        // std::cout << "jump: " << i << std::endl;
+                        repeatn--;
+                    } else {
+                        std::cout << "error on jump endrepeat" << std::endl;
                     }
                 }
                 break;

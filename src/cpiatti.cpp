@@ -226,12 +226,12 @@ void srem(std::stack<long> &s, bool debugprint) {
 
 long stop(std::stack<long> &s, bool debugprint) {
     if (s.empty()) {
-        printred("ERROR peek on empty stack\n");
+        printred("ERROR top on empty stack\n");
         exit(1);
     }
     if (!s.empty()) {
         if (debugprint) {
-            printf("DEBUG peek: %ld\n", s.top());
+            printf("DEBUG top: %ld\n", s.top());
         }
     }
     return s.top();

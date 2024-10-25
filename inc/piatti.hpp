@@ -1,5 +1,4 @@
 #pragma once
-
 #include <stack>
 #include <string>
 #include <vector>
@@ -72,14 +71,14 @@
 #define OP_ENDLOOP 27
 #define OP_EXIT 28
 
-//cpiatti.cpp
+// cpiatti.cpp
 void printstack(std::stack<long> &stack);
 void spush(std::stack<long> &s, long val, bool debugprint);
 void spop(std::stack<long> &s, bool debugprint);
 void srot(std::stack<long> &s, bool debugprint);
 void sput(std::stack<long> &s, bool debugprint);
-void sputc(std::stack<long> &s, bool debugprint); 
-void sdiv(std::stack<long> &s, bool debugprint); 
+void sputc(std::stack<long> &s, bool debugprint);
+void sdiv(std::stack<long> &s, bool debugprint);
 void scopy(std::stack<long> &s, bool debugprint);
 void sswap(std::stack<long> &s, bool debugprint);
 void ssub(std::stack<long> &s, bool debugprint);
@@ -90,18 +89,15 @@ long stop(std::stack<long> &s, bool debugprint);
 long ssize(std::stack<long> &s, bool debugprint);
 void sdrop(std::stack<long> &s, bool debugprint);
 
-//codegen.cpp
-int genir(const std::string inputfilename,   
-std::vector<int> &codesection,
-std::vector<std::string> &datasection);
+// codegen.cpp
+int genir(const std::string inputfilename, std::vector<int> &codesection,
+          std::vector<std::string> &datasection);
 
-std::vector<std::pair<int, int>> gen_pairtable(
-std::vector<int> &codesection);
+std::vector<std::pair<int, int>> gen_pairtable(std::vector<int> &codesection);
 
 int get_offset(std::vector<std::pair<int, int>> &pairtable, const int val);
 
-//vmpiatti.cpp
-void vmrun(std::stack<long> &s,
-std::vector<int> &codesection,
-std::vector<std::string> &datasection,
-std::vector<std::pair<int, int>> &pairtable);
+// vmpiatti.cpp
+void vmrun(std::stack<long> &s, std::vector<int> &codesection,
+           std::vector<std::string> &datasection,
+           std::vector<std::pair<int, int>> &pairtable);

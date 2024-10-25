@@ -1,23 +1,20 @@
-#include "piatti.hpp"
-#include <string>
 #include <iostream>
-#include <vector>
 #include <stack>
+#include <string>
+#include <vector>
 
-int main(int argc, char **argv)
-{
-    if (argc <= 1)
-    {
+#include "piatti.hpp"
+
+int main(int argc, char **argv) {
+    if (argc <= 1) {
         std::cout << "error needed a file path" << std::endl;
         return 1;
     }
-    if (argc > 2)
-    {
+    if (argc > 2) {
         std::cout << "error too many arguments" << std::endl;
         return 1;
     }
-    if (argc == 2)
-    {
+    if (argc == 2) {
         std::string inputfilename = argv[1];
         int ret = 0;
         std::vector<int> codesection;
@@ -25,8 +22,7 @@ int main(int argc, char **argv)
         std::vector<std::pair<int, int>> pairtable;
         std::stack<long> s;
         ret = genir(inputfilename, codesection, datasection);
-        if (ret == 0)
-        {
+        if (ret == 0) {
             std::cout << "ir generated" << std::endl;
             /*
             std::cout << "code" << std::endl;
@@ -38,9 +34,7 @@ int main(int argc, char **argv)
                  std::cout << data << std::endl;
             }
             */
-        }
-        else
-        {
+        } else {
             std::cout << "ir error" << std::endl;
             return 1;
         }
@@ -48,7 +42,7 @@ int main(int argc, char **argv)
         std::cout << "table generated" << std::endl;
         /*
         for (const auto& pair : pairtable) {
-            std::cout << pair.first << " " << pair.second << std::endl; 
+            std::cout << pair.first << " " << pair.second << std::endl;
         }
         */
         vmrun(s, codesection, datasection, pairtable);

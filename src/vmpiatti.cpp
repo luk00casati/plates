@@ -4,6 +4,15 @@
 
 #include "piatti.hpp"
 
+std::pair<char, int> findsign(const std::string data, const std::string signs) {
+    for (size_t i = 0; i < data.length(); i++) {
+        if (signs.find(data[i]) != std::string::npos) {
+            return {data[i], static_cast<int>(i)};
+        }
+    }
+    return {'A', 0};
+}
+
 bool isstrdigits(const std::string str) {
     for (size_t i = 0; i < str.length(); i++) {
         if (!std::isdigit(str[i])) {
@@ -11,6 +20,72 @@ bool isstrdigits(const std::string str) {
         }
     }
     return true;
+}
+
+int handleroperation(std::stack<long> &s, bool debugprint, std::string data) {
+    int arg1 = 0;
+    std::string arg1str;
+    int arg2 = 0;
+    std::string arg2str;
+    int ret = 0;
+    char operation;
+    int splitpoint;
+    std::pair<char, int> opsignandops = findsign(data, "+-*/%");
+    operation = opsignandops.first;
+    splitpoint = opsignandops.second;
+    arg1str = data.substr(0, splitpoint - 1);
+    arg2str = data.substr(splitpoint + 1, data.length());
+    if (isstrdigits(arg1str)) {
+        arg1 = stol(arg1str);
+    }
+    if (isstrdigits(arg2str)) {
+        arg2 = stol(arg2str);
+    }
+    if (arg2str.compare("SIZE") == 0) {
+        arg2 = ssize(s, debugprint);
+    }
+    if (arg1str.compare("SIZE") == 0) {
+        arg1 = ssize(s, debugprint);
+    }
+    if (arg2str.compare("TOP") == 0) {
+        arg2 = stop(s, debugprint);
+    }
+    if (arg1str.compare("TOP") == 0) {
+        arg1 = stop(s, debugprint);
+    }
+    switch (operation) {
+        case '+':
+            ret = arg1 + arg2;
+            break;
+
+        case '-':
+            ret = arg1 - arg2;
+            break;
+
+        case '*':
+            ret = arg1 * arg2;
+            break;
+
+        case '/':
+            if (arg2 == 0){
+                std::cout << "repeat division by zero" << std::endl;
+                exit(1);
+            }
+            ret = arg1 / arg2;
+            break;
+
+        case '%':
+            if (arg2 == 0){
+                std::cout << "repeat division by zero" << std::endl;
+                exit(1);
+            }
+            ret = arg1 % arg2;
+            break;
+
+        default:
+            break;
+    }
+    return ret;
 }
 
 int jumpbackto(std::vector<int> codesection, const int index, const int inst) {
@@ -130,7 +205,8 @@ void vmrun(std::stack<long> &s, std::vector<int> &codesection,
                 } else if (data.compare("TOP") == 0) {
                     repeatn = stop(s, debugprint);
                 } else {
-                    std::cout << "no impl: " << data << std::endl;
+                    // std::cout << "no impl: " << data << std::endl;
+                    repeatn = handleroperation(s, debugprint, data);
                 }
                 if (repeatn == 0) {
                     jump = jumpforwardto(codesection, i, OP_ENDREPEAT);

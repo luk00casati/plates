@@ -4,10 +4,11 @@
 
 #include "piatti.hpp"
 
-std::pair<char, int> findsign(const std::string data, const std::string signs) {
+std::pair<char, size_t> findsign(const std::string data,
+                                 const std::string signs) {
     for (size_t i = 0; i < data.length(); i++) {
         if (signs.find(data[i]) != std::string::npos) {
-            return {data[i], static_cast<int>(i)};
+            return {data[i], i};
         }
     }
     return {'A', 0};
@@ -23,17 +24,17 @@ bool isstrdigits(const std::string str) {
 }
 
 int handleroperation(std::stack<long> &s, bool debugprint, std::string data) {
-    int arg1 = 0;
+    long arg1 = 0;
     std::string arg1str;
-    int arg2 = 0;
+    long arg2 = 0;
     std::string arg2str;
-    int ret = 0;
+    long ret = 0;
     char operation;
-    int splitpoint;
-    std::pair<char, int> opsignandops = findsign(data, "+-*/%");
+    size_t splitpoint;
+    std::pair<char, size_t> opsignandops = findsign(data, "+-*/%");
     operation = opsignandops.first;
     splitpoint = opsignandops.second;
-    arg1str = data.substr(0, splitpoint - 1);
+    arg1str = data.substr(0, splitpoint);
     arg2str = data.substr(splitpoint + 1, data.length());
     if (isstrdigits(arg1str)) {
         arg1 = stol(arg1str);
@@ -53,6 +54,9 @@ int handleroperation(std::stack<long> &s, bool debugprint, std::string data) {
     if (arg1str.compare("TOP") == 0) {
         arg1 = stop(s, debugprint);
     }
+    // std::cout << "arg1: " << arg1 << std::endl;
+    // std::cout << "arg2: " << arg2 << std::endl;
+    // std::cout << "operation: " << operation << std::endl;
     switch (operation) {
         case '+':
             ret = arg1 + arg2;
@@ -67,16 +71,16 @@ int handleroperation(std::stack<long> &s, bool debugprint, std::string data) {
             break;
 
         case '/':
-            if (arg2 == 0){
-                std::cout << "repeat division by zero" << std::endl;
+            if (arg2 == 0) {
+                printred("repeat division by zero");
                 exit(1);
             }
             ret = arg1 / arg2;
             break;
 
         case '%':
-            if (arg2 == 0){
-                std::cout << "repeat division by zero" << std::endl;
+            if (arg2 == 0) {
+                printred("repeat division by zero");
                 exit(1);
             }
             ret = arg1 % arg2;

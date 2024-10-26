@@ -1,7 +1,7 @@
 PUSH 1
 PUSH 2
 
-REPEAT 20 - 1 DO
+REPEAT 20 DO
     COPY
     ROT
     SUM

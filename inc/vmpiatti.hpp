@@ -2,9 +2,9 @@
 #include <stack>
 #include <string>
 #include <vector>
+
 void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
-           std::vector<std::string> &datasection,
-           std::vector<std::pair<int, int>> &pairtable);
+           std::vector<std::string> &datasection);
 
 long handleroperationrepeat(std::stack<long> &s, bool debugprint,
                             const std::string data);

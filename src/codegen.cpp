@@ -67,36 +67,6 @@ std::string removespace(std::string str) {
     return str;
 }
 
-std::vector<std::pair<int, int>> gen_pairtable(std::vector<int> &codesection) {
-    std::vector<std::pair<int, int>> vec;
-    size_t data = 0;
-    for (size_t i = 0; i < codesection.size(); i++) {
-        switch (codesection[i]) {
-            case OP_PUSH:
-            case OP_REPEAT:
-            case OP_IF:
-            case OP_ELIF:
-            case OP_PUSHC:
-                vec.push_back({i, data});
-                data++;
-                break;
-
-            default:
-                break;
-        }
-    }
-    return vec;
-}
-
-long get_offset(std::vector<std::pair<int, int>> &pairtable, const long val) {
-    for (auto &pair : pairtable) {
-        if (pair.first == val) {
-            return pair.second;
-        }
-    }
-    return -1;
-}
-
 int handle_end_type(std::stack<int> &end_type, std::vector<int> &codesection) {
     if (end_type.empty()) {
         // std::cout << "ERROR END miss match" << std::endl;

@@ -13,13 +13,11 @@ void printred(const char *str) {
     puts(ANSI_COLOR_RESET);
 }
 
-// no opcode
-void printstack(std::stack<long> &stack) {
-    std::stack<long> d = stack;
-    while (!d.empty()) {
-        std::cout << "print stack stack start" << std::endl;
-        std::cout << d.top() << std::endl;
-        d.pop();
+void printstack(std::stack<long> stack) {
+    std::cout << "print stack stack start" << std::endl;
+    while (!stack.empty()) {
+        std::cout << stack.top() << std::endl;
+        stack.pop();
     }
     std::cout << "print stack stack end" << std::endl;
 }

@@ -20,7 +20,6 @@ int main(int argc, char** argv) {
         int ret = 0;
         std::vector<int> codesection;
         std::vector<std::string> datasection;
-        std::vector<std::pair<int, int>> pairtable;
         std::stack<long> s;
         bool debugprint = false;
         ret = genir(inputfilename, codesection, datasection);
@@ -37,20 +36,11 @@ int main(int argc, char** argv) {
                 std::cout << data << std::endl;
             }
 #endif
-
         } else {
             std::cout << "ir error" << std::endl;
             return 1;
         }
-        pairtable = gen_pairtable(codesection);
-#ifdef DEBUG
-        std::cout << "table generated" << std::endl;
-
-        for (const auto& pair : pairtable) {
-            std::cout << pair.first << " " << pair.second << std::endl;
-        }
-#endif
-        vmrun(s, debugprint, codesection, datasection, pairtable);
+        vmrun(s, debugprint, codesection, datasection);
     }
     return 0;
 }

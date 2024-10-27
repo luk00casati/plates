@@ -140,14 +140,13 @@ long jumpforwardto(std::vector<int> codesection, const long index,
 }
 
 void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
-           std::vector<std::string> &datasection,
-           std::vector<std::pair<int, int>> &pairtable) {
+           std::vector<std::string> &datasection) {
     bool ifflag = false;
     bool elifflag = false;
     bool loopflag = false;
-    size_t offset = 0;
     long jump = 0;
     long repeatn = 0;
+    long datai = 0;
     std::string data;
 
     size_t i = 0;
@@ -161,20 +160,18 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
 
         // std::cout << "instruction " << inst << " i: " << i << std::endl;
 
-        // printstack(s);
-
         switch (inst) {
             case OP_PUSH:
-                offset = get_offset(pairtable, i);
-                data = datasection[offset];
+                data = datasection[datai];
                 // std::cout << data << std::endl;
                 spush(s, stol(data), debugprint);
+                datai++;
                 break;
 
             case OP_PUSHC:
-                offset = get_offset(pairtable, i);
-                data = datasection[offset];
+                data = datasection[datai];
                 spushc(s, ctol(data), debugprint);
+                datai++;
                 break;
 
             case OP_SWAP:
@@ -234,8 +231,7 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 break;
 
             case OP_REPEAT:
-                offset = get_offset(pairtable, i);
-                data = datasection[offset];
+                data = datasection[datai];
                 repeatn = handleroperationrepeat(s, debugprint, data);
                 // std::cout << repeatn << std::endl;
                 if (repeatn == 0) {
@@ -246,6 +242,7 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                         std::cout << "error on jump repeat" << std::endl;
                     }
                 }
+                datai++;
                 break;
 
             case OP_ENDREPEAT:

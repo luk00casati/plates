@@ -2,7 +2,10 @@
 #include <string>
 #include <vector>
 
-#include "piatti.hpp"
+#include "codegen.hpp"
+#include "cpiatti.hpp"
+#include "vmpiatti.hpp"
+#include "define.hpp"
 
 std::pair<char, size_t> findsign(const std::string data,
                                  const std::string signs) {
@@ -251,6 +254,12 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
 
             case OP_BREAK:
                 loopflag = false;
+                jump = jumpforwardto(codesection, i, OP_ENDLOOP);
+                if (jump != -1) {
+                    i = jump;
+                } else {
+                    std::cout << "error on jump break" << std::endl;
+                }
                 break;
 
             case OP_ENDLOOP:

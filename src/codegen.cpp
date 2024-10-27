@@ -6,7 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "piatti.hpp"
+#include "define.hpp"
+#include "codegen.hpp"
+#define COMMENT '#'
 
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
     std::regex(R"(\s*DEBUGON\s*)"),   // Pattern 0: DEBUGON
@@ -85,7 +87,7 @@ std::vector<std::pair<int, int>> gen_pairtable(std::vector<int> &codesection) {
     return vec;
 }
 
-size_t get_offset(std::vector<std::pair<int, int>> &pairtable, const long val) {
+long get_offset(std::vector<std::pair<int, int>> &pairtable, const long val) {
     for (auto &pair : pairtable) {
         if (pair.first == val) {
             return pair.second;

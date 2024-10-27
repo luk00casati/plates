@@ -85,7 +85,7 @@ std::vector<std::pair<int, int>> gen_pairtable(std::vector<int> &codesection) {
     return vec;
 }
 
-int get_offset(std::vector<std::pair<int, int>> &pairtable, const int val) {
+size_t get_offset(std::vector<std::pair<int, int>> &pairtable, const long val) {
     for (auto &pair : pairtable) {
         if (pair.first == val) {
             return pair.second;

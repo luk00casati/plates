@@ -2,7 +2,7 @@ project('plates', 'cpp',
   version : '0.1',
   default_options : [
     'cpp_std=c++11', # Set C++ standard
-    'warning_level=3', # warming
+    'warning_level=everything', # warming
     'buildtype=debugoptimized', # Set optimizer
   ]
 )

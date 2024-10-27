@@ -96,9 +96,9 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
 
 std::vector<std::pair<int, int>> gen_pairtable(std::vector<int> &codesection);
 
-int get_offset(std::vector<std::pair<int, int>> &pairtable, const int val);
+size_t get_offset(std::vector<std::pair<int, int>> &pairtable, const long val);
 
 // vmpiatti.cpp
-void vmrun(std::stack<long> &s, std::vector<int> &codesection,
+void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
            std::vector<std::string> &datasection,
            std::vector<std::pair<int, int>> &pairtable);

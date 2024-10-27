@@ -21,9 +21,10 @@ int main(int argc, char **argv) {
         std::vector<std::string> datasection;
         std::vector<std::pair<int, int>> pairtable;
         std::stack<long> s;
+        bool debugprint = false;
         ret = genir(inputfilename, codesection, datasection);
         if (ret == 0) {
-            std::cout << "ir generated" << std::endl;
+            // std::cout << "ir generated" << std::endl;
             /*
             std::cout << "code" << std::endl;
             for (const auto& code : codesection) {
@@ -39,13 +40,13 @@ int main(int argc, char **argv) {
             return 1;
         }
         pairtable = gen_pairtable(codesection);
-        std::cout << "table generated" << std::endl;
+        // std::cout << "table generated" << std::endl;
         /*
         for (const auto& pair : pairtable) {
             std::cout << pair.first << " " << pair.second << std::endl;
         }
         */
-        vmrun(s, codesection, datasection, pairtable);
+        vmrun(s, debugprint, codesection, datasection, pairtable);
     }
     return 0;
 }

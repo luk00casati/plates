@@ -23,8 +23,8 @@ bool isstrdigits(const std::string str) {
     return true;
 }
 
-int handleroperationrepeat(std::stack<long> &s, bool debugprint,
-                           const std::string data) {
+long handleroperationrepeat(std::stack<long> &s, bool debugprint,
+                            const std::string data) {
     long arg1 = 0;
     std::string arg1str;
     long arg2 = 0;
@@ -106,8 +106,9 @@ int handleroperationrepeat(std::stack<long> &s, bool debugprint,
     return ret;
 }
 
-int jumpbackto(std::vector<int> codesection, const int index, const int inst) {
-    for (int i = index; i >= 0; i--) {
+long jumpbackto(std::vector<int> codesection, const long index,
+                const int inst) {
+    for (long i = index; i >= 0; i--) {
         if (codesection[i] == inst) {
             return i;
         }
@@ -115,9 +116,9 @@ int jumpbackto(std::vector<int> codesection, const int index, const int inst) {
     return -1;
 }
 
-int jumpforwardto(std::vector<int> codesection, const int index,
-                  const int inst) {
-    for (int i = 0; i < index; i++) {
+long jumpforwardto(std::vector<int> codesection, const long index,
+                   const int inst) {
+    for (long i = 0; i < index; i++) {
         if (codesection[i] == inst) {
             return i;
         }
@@ -125,14 +126,13 @@ int jumpforwardto(std::vector<int> codesection, const int index,
     return -1;
 }
 
-void vmrun(std::stack<long> &s, std::vector<int> &codesection,
+void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
            std::vector<std::string> &datasection,
            std::vector<std::pair<int, int>> &pairtable) {
     bool ifflag = false;
     bool elifflag = false;
     bool loopflag = false;
-    bool debugprint = false;
-    int offset = 0;
+    size_t offset = 0;
     long jump = 0;
     long repeatn = 0;
     std::string data;

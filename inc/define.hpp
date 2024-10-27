@@ -24,8 +24,9 @@
 #define REGEX_EMPTYLINE 21
 #define REGEX_POP 22
 #define REGEX_LOOP 23
+#define REGEX_PUSHC 24
 
-#define REGEX_LIST_SIZE 24
+#define REGEX_LIST_SIZE 25
 
 #define END_IF 0
 #define END_ELIF 1
@@ -62,3 +63,4 @@
 #define OP_ENDREPEAT 26
 #define OP_ENDLOOP 27
 #define OP_EXIT 28
+#define OP_PUSHC 29

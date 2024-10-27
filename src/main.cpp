@@ -6,7 +6,7 @@
 #include "codegen.hpp"
 #include "vmpiatti.hpp"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     if (argc <= 1) {
         std::cout << "error needed a file path" << std::endl;
         return 1;
@@ -25,28 +25,31 @@ int main(int argc, char **argv) {
         bool debugprint = false;
         ret = genir(inputfilename, codesection, datasection);
         if (ret == 0) {
-            // std::cout << "ir generated" << std::endl;
-            /*
+#ifdef DEBUG
+            std::cout << "ir generated" << std::endl;
+
             std::cout << "code" << std::endl;
             for (const auto& code : codesection) {
-                 std::cout << code << std::endl;
+                std::cout << code << std::endl;
             }
             std::cout << "data" << std::endl;
             for (const auto& data : datasection) {
-                 std::cout << data << std::endl;
+                std::cout << data << std::endl;
             }
-            */
+#endif
+
         } else {
             std::cout << "ir error" << std::endl;
             return 1;
         }
         pairtable = gen_pairtable(codesection);
-        // std::cout << "table generated" << std::endl;
-        /*
+#ifdef DEBUG
+        std::cout << "table generated" << std::endl;
+
         for (const auto& pair : pairtable) {
             std::cout << pair.first << " " << pair.second << std::endl;
         }
-        */
+#endif
         vmrun(s, debugprint, codesection, datasection, pairtable);
     }
     return 0;

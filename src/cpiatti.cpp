@@ -1,8 +1,9 @@
+#include "cpiatti.hpp"
+
 #include <iostream>
 #include <stack>
 
 #include "define.hpp"
-#include "cpiatti.hpp"
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
@@ -27,6 +28,13 @@ void spush(std::stack<long> &s, const long val, bool debugprint) {
     s.push(val);
     if (debugprint) {
         printf("DEBUG push: \n%ld\n", val);
+    }
+}
+
+void spushc(std::stack<long> &s, const long val, bool debugprint) {
+    s.push(val);
+    if (debugprint) {
+        printf("DEBUG pushc: \n%c\n", static_cast<unsigned char>(val));
     }
 }
 

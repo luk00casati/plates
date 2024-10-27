@@ -7,7 +7,7 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
            std::vector<std::pair<int, int>> &pairtable);
 
 long handleroperationrepeat(std::stack<long> &s, bool debugprint,
-                        const std::string data);
+                            const std::string data);
 
 bool isstrdigits(const std::string str);
 
@@ -18,3 +18,5 @@ long jumpbackto(std::vector<int> codesection, const long index, const int inst);
 
 long jumpforwardto(std::vector<int> codesection, const long index,
                    const int inst);
+
+long ctol(std::string str);

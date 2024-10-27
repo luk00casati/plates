@@ -1,3 +1,5 @@
+#include "codegen.hpp"
+
 #include <array>
 #include <fstream>
 #include <iostream>
@@ -7,7 +9,6 @@
 #include <vector>
 
 #include "define.hpp"
-#include "codegen.hpp"
 #define COMMENT '#'
 
 std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
@@ -21,23 +22,24 @@ std::array<std::regex, REGEX_LIST_SIZE> regex_patterns = {
         R"(\s*IF\s+((SIZE|TOP|\d+)\s+(\==|\!=|\<|\>|\<=|\>=)\s+(SIZE|TOP|\d+))\s+DO\s*)"),  // Pattern 5: IF
     std::regex(
         R"(\s*ELIF\s+((SIZE|TOP|\d+)\s+(\==|\!=|\<|\>|\<=|\>=)\s+(SIZE|TOP|\d+))\s+DO\s*)"),  // Pattern 6: ELIF
-    std::regex(R"(\s*ELSE\s+DO\s*)"),     // Pattern 7: ELSE
-    std::regex(R"(\s*PUSH\s+(\d+)\s*)"),  // Pattern 8: PUSH
-    std::regex(R"(\s*ROT\s*)"),           // Pattern 9: ROT
-    std::regex(R"(\s*PUT\s*)"),           // Pattern 10: PUT
-    std::regex(R"(\s*PUTC\s*)"),          // Pattern 11: PUTC
-    std::regex(R"(\s*PUTNL\s*)"),         // Pattern 12: PUTNL
-    std::regex(R"(\s*COPY\s*)"),          // Pattern 13: COPY
-    std::regex(R"(\s*SWAP\s*)"),          // Pattern 14: SWAP
-    std::regex(R"(\s*SUM\s*)"),           // Pattern 15: SUM
-    std::regex(R"(\s*SUB\s*)"),           // Pattern 16: SUB
-    std::regex(R"(\s*MUL\s*)"),           // Pattern 17: MUL
-    std::regex(R"(\s*DIV\s*)"),           // Pattern 18: DIV
-    std::regex(R"(\s*REM\s*)"),           // Pattern 19: REM
-    std::regex(R"(\s*DROP\s*)"),          // Pattern 20: DROP
-    std::regex(R"(\s*)"),                 // Pattern 21: EMPTYLINE
-    std::regex(R"(\s*POP\s*)"),           // Pattern 22: POP
-    std::regex(R"(\s*LOOP\s+DO\s*)"),     // Pattern 23: LOOP
+    std::regex(R"(\s*ELSE\s+DO\s*)"),           // Pattern 7: ELSE
+    std::regex(R"(\s*PUSH\s+(\d+)\s*)"),        // Pattern 8: PUSH
+    std::regex(R"(\s*ROT\s*)"),                 // Pattern 9: ROT
+    std::regex(R"(\s*PUT\s*)"),                 // Pattern 10: PUT
+    std::regex(R"(\s*PUTC\s*)"),                // Pattern 11: PUTC
+    std::regex(R"(\s*PUTNL\s*)"),               // Pattern 12: PUTNL
+    std::regex(R"(\s*COPY\s*)"),                // Pattern 13: COPY
+    std::regex(R"(\s*SWAP\s*)"),                // Pattern 14: SWAP
+    std::regex(R"(\s*SUM\s*)"),                 // Pattern 15: SUM
+    std::regex(R"(\s*SUB\s*)"),                 // Pattern 16: SUB
+    std::regex(R"(\s*MUL\s*)"),                 // Pattern 17: MUL
+    std::regex(R"(\s*DIV\s*)"),                 // Pattern 18: DIV
+    std::regex(R"(\s*REM\s*)"),                 // Pattern 19: REM
+    std::regex(R"(\s*DROP\s*)"),                // Pattern 20: DROP
+    std::regex(R"(\s*)"),                       // Pattern 21: EMPTYLINE
+    std::regex(R"(\s*POP\s*)"),                 // Pattern 22: POP
+    std::regex(R"(\s*LOOP\s+DO\s*)"),           // Pattern 23: LOOP
+    std::regex(R"(\s*PUSHC\s+([A-Za-z])\s*)"),  // Pattern 24: PUSHC
 };
 
 std::pair<bool, int> regex_in_list(const std::string str) {
@@ -74,13 +76,12 @@ std::vector<std::pair<int, int>> gen_pairtable(std::vector<int> &codesection) {
             case OP_REPEAT:
             case OP_IF:
             case OP_ELIF:
-                // ptrvec.push_back(std::make_shared<std::string>(datasection[i]));
+            case OP_PUSHC:
                 vec.push_back({i, data});
                 data++;
                 break;
 
             default:
-                // ptrvec.push_back(nullptr);
                 break;
         }
     }
@@ -177,6 +178,12 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
                     // outputfile << OP_PUSH << "," << Match.str(1) <<
                     // std::endl;
                     codesection.push_back(OP_PUSH);
+                    datasection.push_back(Match.str(1));
+                    break;
+
+                case REGEX_PUSHC:
+                    std::regex_search(line, Match, regex_patterns[REGEX_PUSHC]);
+                    codesection.push_back(OP_PUSHC);
                     datasection.push_back(Match.str(1));
                     break;
 

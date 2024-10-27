@@ -1,11 +1,17 @@
+#include "vmpiatti.hpp"
+
 #include <iostream>
 #include <string>
 #include <vector>
 
 #include "codegen.hpp"
 #include "cpiatti.hpp"
-#include "vmpiatti.hpp"
 #include "define.hpp"
+
+long ctol(std::string str) {
+    long value = static_cast<long>(str[0]);
+    return value;
+}
 
 std::pair<char, size_t> findsign(const std::string data,
                                  const std::string signs) {
@@ -109,6 +115,10 @@ long handleroperationrepeat(std::stack<long> &s, bool debugprint,
     return ret;
 }
 
+bool handleroperationif(std::stack<long> &s, bool debugprint,
+                        const std::string data) {
+}
+
 long jumpbackto(std::vector<int> codesection, const long index,
                 const int inst) {
     for (long i = index; i >= 0; i--) {
@@ -148,6 +158,7 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
             break;
         }
         int inst = codesection[i];
+
         // std::cout << "instruction " << inst << " i: " << i << std::endl;
 
         // printstack(s);
@@ -158,6 +169,12 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 data = datasection[offset];
                 // std::cout << data << std::endl;
                 spush(s, stol(data), debugprint);
+                break;
+
+            case OP_PUSHC:
+                offset = get_offset(pairtable, i);
+                data = datasection[offset];
+                spushc(s, ctol(data), debugprint);
                 break;
 
             case OP_SWAP:
@@ -220,7 +237,7 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 offset = get_offset(pairtable, i);
                 data = datasection[offset];
                 repeatn = handleroperationrepeat(s, debugprint, data);
-                /*
+                // std::cout << repeatn << std::endl;
                 if (repeatn == 0) {
                     jump = jumpforwardto(codesection, i, OP_ENDREPEAT);
                     if (jump != -1) {
@@ -229,14 +246,13 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                         std::cout << "error on jump repeat" << std::endl;
                     }
                 }
-                */
                 break;
 
             case OP_ENDREPEAT:
                 if (repeatn < 0) {
                     std::cout << "error reapeat panic" << std::endl;
-                } else if (repeatn == 0) { /*null*/
-                } else if (repeatn > 0) {
+                } else if (repeatn == 1) { /*null*/
+                } else if (repeatn > 1) {
                     jump = jumpbackto(codesection, i, OP_REPEAT);
                     if (jump != -1) {
                         i = jump;

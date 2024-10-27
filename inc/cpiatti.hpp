@@ -3,7 +3,8 @@
 
 void printred(const char *str);
 void printstack(std::stack<long> &stack);
-void spush(std::stack<long> &s, long val, bool debugprint);
+void spush(std::stack<long> &s, const long val, bool debugprint);
+void spushc(std::stack<long> &s, const long val, bool debugprint);
 void spop(std::stack<long> &s, bool debugprint);
 void srot(std::stack<long> &s, bool debugprint);
 void sput(std::stack<long> &s, bool debugprint);

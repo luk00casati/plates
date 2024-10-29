@@ -8,9 +8,8 @@
 #include "cpiatti.hpp"
 #include "define.hpp"
 
-long ctol(std::string str) {
-    long value = static_cast<long>(str[0]);
-    return value;
+long ctol(const std::string str) {
+    return static_cast<long>(str[0]);
 }
 
 std::pair<char, size_t> findsign(const std::string data,
@@ -20,7 +19,9 @@ std::pair<char, size_t> findsign(const std::string data,
             return {data[i], i};
         }
     }
-    return {'A', 0};
+    std::cout << "findsign panic" << std::endl;
+    exit(1);
+    // return {'A', 0};
 }
 
 bool isstrdigits(const std::string str) {
@@ -116,27 +117,140 @@ long handleroperationrepeat(std::stack<long> &s, bool debugprint,
 }
 
 bool handleroperationif(std::stack<long> &s, bool debugprint,
-                        const std::string data) {
+                        std::string data) {
+    long arg1 = 0;
+    long arg2 = 0;
+    std::string arg1str;
+    std::string arg2str;
+    bool ret = false;
+    size_t splitpoint = 0;
+    char operation1;
+    char operation2;
+    int operationstrsize = 0;
+    std::pair<char, size_t> opsignandops = findsign(data, "=!<>");
+    operation1 = opsignandops.first;
+    splitpoint = opsignandops.second;
+    operation2 = data[splitpoint + 1];
+    switch (operation1) {
+        case '<':
+            if (operation2 == '=') {
+                operationstrsize = 2;
+            } else {
+                operationstrsize = 1;
+            }
+            break;
+
+        case '>':
+            if (operation2 == '=') {
+                operationstrsize = 2;
+            } else {
+                operationstrsize = 1;
+            }
+            break;
+
+        case '=':
+            operationstrsize = 2;
+            break;
+
+        case '!':
+            operationstrsize = 2;
+            break;
+
+        default:
+            std::cout << "invalid operator" << std::endl;
+            break;
+    }
+    arg1str = data.substr(0, splitpoint);
+    arg2str = data.substr(splitpoint + operationstrsize, data.length());
+    if (isstrdigits(arg1str)) {
+        arg1 = stol(arg1str);
+    }
+    if (isstrdigits(arg2str)) {
+        arg2 = stol(arg2str);
+    }
+    if (arg2str.compare("SIZE") == 0) {
+        arg2 = ssize(s, debugprint);
+    }
+    if (arg1str.compare("SIZE") == 0) {
+        arg1 = ssize(s, debugprint);
+    }
+    if (arg2str.compare("TOP") == 0) {
+        arg2 = stop(s, debugprint);
+    }
+    if (arg1str.compare("TOP") == 0) {
+        arg1 = stop(s, debugprint);
+    }
+    std::cout << arg1 << std::endl;
+    std::cout << arg2 << std::endl;
+    std::cout << operation1 << std::endl;
+    std::cout << operation2 << std::endl;
+    switch (operation1) {
+        case '=':
+            ret = (arg1 == arg2);
+            break;
+
+        case '!':
+            ret = (arg1 != arg2);
+            break;
+            /*
+            case '>':
+                if (operationstrsize == 1) {
+                    ret = (arg1 > arg2);
+                }
+                if (operationstrsize == 2) {
+                    ret = (arg1 >= arg2);
+                }
+                break;
+
+            case '<':
+                if (operationstrsize == 1) {
+                    ret = (arg1 < arg2);
+                }
+                if (operationstrsize == 2) {
+                    ret = (arg1 <= arg2);
+                }
+                break;
+                */
+
+        default:
+            std::cout << "invalid operation" << std::endl;
+            break;
+    }
+    return ret;
 }
 
-long jumpbackto(std::vector<int> codesection, const long index,
-                const int inst) {
-    for (long i = index; i >= 0; i--) {
-        if (codesection[i] == inst) {
-            return i;
+size_t jumpbackto(std::vector<int> codesection, const size_t current_index,
+                  const int current_inst, const int dest_inst) {
+    long current_inst_counter = 0;
+    for (size_t i = current_index; i >= 0; i--) {
+        if (codesection[i] == current_inst) {
+            current_inst_counter++;
+        }
+        if (codesection[i] == dest_inst && current_inst_counter == 0) {
+            return i - current_index;
+        } else if (codesection[i] == dest_inst && current_inst_counter != 0) {
+            current_inst_counter--;
         }
     }
-    return -1;
+    std::cout << "panic jumpbackto" << std::endl;
+    exit(1);
 }
 
-long jumpforwardto(std::vector<int> codesection, const long index,
-                   const int inst) {
-    for (long i = 0; i < index; i++) {
-        if (codesection[i] == inst) {
-            return i;
+size_t jumpforwardto(std::vector<int> codesection, const size_t current_index,
+                     const int current_inst, const int dest_inst) {
+    long current_inst_counter = 0;
+    for (size_t i = 0; i < current_index; i++) {
+        if (codesection[i] == current_inst) {
+            current_inst_counter++;
+        }
+        if (codesection[i] == dest_inst && current_inst_counter == 0) {
+            return i + current_index;
+        } else if (codesection[i] == dest_inst && current_inst_counter != 0) {
+            current_inst_counter--;
         }
     }
-    return -1;
+    std::cout << "panic jumpforwardto" << std::endl;
+    exit(1);
 }
 
 void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
@@ -144,7 +258,6 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
     bool ifflag = false;
     bool elifflag = false;
     bool loopflag = false;
-    long jump = 0;
     long repeatn = 0;
     long datai = 0;
     std::string data;
@@ -230,17 +343,46 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 scopy(s, debugprint);
                 break;
 
+            case OP_ENDELSE:
+                break;
+
+            case OP_ENDELIF:
+                break;
+
+            case OP_ENDIF:
+                break;
+
+            case OP_IF:
+                data = datasection[datai];
+                std::cout << data << std::endl;
+                ifflag = handleroperationif(s, debugprint, data);
+                if (ifflag == false) {
+                    i = jumpforwardto(codesection, i, OP_IF, OP_ENDIF);
+                }
+                datai++;
+                break;
+
+            case OP_ELIF:
+                data = datasection[datai];
+                elifflag = handleroperationif(s, debugprint, data);
+                if (ifflag == true || elifflag == false) {
+                    i = jumpforwardto(codesection, i, OP_ELIF, OP_ENDELIF);
+                }
+                datai++;
+                break;
+
+            case OP_ELSE:
+                if (ifflag == true || elifflag == true) {
+                    i = jumpforwardto(codesection, i, OP_ELSE, OP_ENDELSE);
+                }
+                break;
+
             case OP_REPEAT:
                 data = datasection[datai];
                 repeatn = handleroperationrepeat(s, debugprint, data);
                 // std::cout << repeatn << std::endl;
                 if (repeatn == 0) {
-                    jump = jumpforwardto(codesection, i, OP_ENDREPEAT);
-                    if (jump != -1) {
-                        i = jump;
-                    } else {
-                        std::cout << "error on jump repeat" << std::endl;
-                    }
+                    i = jumpforwardto(codesection, i, OP_REPEAT, OP_ENDREPEAT);
                 }
                 datai++;
                 break;
@@ -250,14 +392,8 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                     std::cout << "error reapeat panic" << std::endl;
                 } else if (repeatn == 1) { /*null*/
                 } else if (repeatn > 1) {
-                    jump = jumpbackto(codesection, i, OP_REPEAT);
-                    if (jump != -1) {
-                        i = jump;
-                        // std::cout << "jump: " << i << std::endl;
-                        repeatn--;
-                    } else {
-                        std::cout << "error on jump endrepeat" << std::endl;
-                    }
+                    i = jumpbackto(codesection, i, OP_ENDREPEAT, OP_REPEAT);
+                    repeatn--;
                 }
                 break;
 
@@ -267,22 +403,12 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
 
             case OP_BREAK:
                 loopflag = false;
-                jump = jumpforwardto(codesection, i, OP_ENDLOOP);
-                if (jump != -1) {
-                    i = jump;
-                } else {
-                    std::cout << "error on jump break" << std::endl;
-                }
+                i = jumpforwardto(codesection, i, OP_BREAK, OP_ENDLOOP);
                 break;
 
             case OP_ENDLOOP:
                 if (loopflag) {
-                    jump = jumpbackto(codesection, i, OP_LOOP);
-                    if (jump != -1) {
-                        i = jump;
-                    } else {
-                        std::cout << "error on jump endloop" << std::endl;
-                    }
+                    i = jumpbackto(codesection, i, OP_ENDLOOP, OP_LOOP);
                 }
                 break;
 

@@ -9,14 +9,18 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
 long handleroperationrepeat(std::stack<long> &s, bool debugprint,
                             const std::string data);
 
+bool handleroperationif(std::stack<long> &s, bool debugprint,
+                        const std::string data);
+
 bool isstrdigits(const std::string str);
 
 std::pair<char, size_t> findsign(const std::string data,
                                  const std::string signs);
 
-long jumpbackto(std::vector<int> codesection, const long index, const int inst);
+size_t jumpbackto(std::vector<int> codesection, const size_t current_index,
+                const int current_inst, const int dest_inst);
 
-long jumpforwardto(std::vector<int> codesection, const long index,
-                   const int inst);
+size_t jumpforwardto(std::vector<int> codesection, const size_t current_index,
+                   const int current_inst, const int dest_inst);
 
-long ctol(std::string str);
+long ctol(const std::string str);

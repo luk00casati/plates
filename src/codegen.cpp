@@ -69,39 +69,30 @@ std::string removespace(std::string str) {
 
 int handle_end_type(std::stack<int> &end_type, std::vector<int> &codesection) {
     if (end_type.empty()) {
-        // std::cout << "ERROR END miss match" << std::endl;
-        //  closeanddeletefile(outputfile, outputfilename);
-        //  inputfile.close();
         return 1;
-        // exit(1);
     } else {
         switch (end_type.top()) {
             case END_REPEAT:
-                // outputfile << OP_ENDREPEAT << std::endl;
                 codesection.push_back(OP_ENDREPEAT);
                 end_type.pop();
                 break;
 
             case END_LOOP:
-                // outputfile << OP_ENDLOOP << std::endl;
                 codesection.push_back(OP_ENDLOOP);
                 end_type.pop();
                 break;
 
             case END_IF:
-                // outputfile << OP_ENDIF << std::endl;
                 codesection.push_back(OP_ENDIF);
                 end_type.pop();
                 break;
 
             case END_ELIF:
-                // outputfile << OP_ENDELIF << std::endl;
                 codesection.push_back(OP_ELIF);
                 end_type.pop();
                 break;
 
             case END_ELSE:
-                // outputfile << OP_ENDELSE << std::endl;
                 codesection.push_back(OP_ELSE);
                 end_type.pop();
                 break;
@@ -117,20 +108,11 @@ int handle_end_type(std::stack<int> &end_type, std::vector<int> &codesection) {
 int genir(const std::string inputfilename, std::vector<int> &codesection,
           std::vector<std::string> &datasection) {
     std::ifstream inputfile(inputfilename);
-    // std::ofstream  outputfile(outputfilename);
 
     if (!inputfile.is_open()) {
         std::cerr << "Could not open the file: " << inputfilename << std::endl;
         return 1;
-        // exit(1);
     }
-
-    /*
-    if (!outputfile.is_open()) {
-        std::cerr << "Could not open the file: " << outputfilename << std::endl;
-        exit(1);
-    }
-    */
 
     std::stack<int> end_type;
     std::string line;
@@ -141,12 +123,9 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
         line = removecomment(line);
         std::pair<bool, int> res = regex_in_list(line);
         if (res.first) {
-            // std::cout << "match found: " << res.second << std::endl;
             switch (res.second) {
                 case REGEX_PUSH:
                     std::regex_search(line, Match, regex_patterns[REGEX_PUSH]);
-                    // outputfile << OP_PUSH << "," << Match.str(1) <<
-                    // std::endl;
                     codesection.push_back(OP_PUSH);
                     datasection.push_back(Match.str(1));
                     break;
@@ -161,7 +140,6 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
                     std::regex_search(line, Match,
                                       regex_patterns[REGEX_REPEAT]);
                     M = removespace(Match.str(1));
-                    // outputfile << OP_REPEAT << "," << M << std::endl;
                     codesection.push_back(OP_REPEAT);
                     datasection.push_back(M);
                     end_type.push(END_REPEAT);
@@ -170,7 +148,6 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
                 case REGEX_IF:
                     std::regex_search(line, Match, regex_patterns[REGEX_IF]);
                     M = removespace(Match.str(1));
-                    // outputfile << OP_IF << "," << M << std::endl;
                     codesection.push_back(OP_IF);
                     datasection.push_back(M);
                     end_type.push(END_IF);
@@ -179,20 +156,17 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
                 case REGEX_ELIF:
                     std::regex_search(line, Match, regex_patterns[REGEX_ELIF]);
                     M = removespace(Match.str(1));
-                    // outputfile << OP_ELIF << "," << M << std::endl;
                     codesection.push_back(OP_ELIF);
                     datasection.push_back(M);
                     end_type.push(END_ELIF);
                     break;
 
                 case REGEX_ELSE:
-                    // outputfile << OP_ELSE << std::endl;
                     codesection.push_back(OP_ELSE);
                     end_type.push(END_ELSE);
                     break;
 
                 case REGEX_LOOP:
-                    // outputfile << OP_LOOP << std::endl;
                     codesection.push_back(OP_LOOP);
                     end_type.push(END_LOOP);
                     break;
@@ -207,42 +181,34 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
                     }
 
                 case REGEX_COPY:
-                    // outputfile << OP_COPY << std::endl;
                     codesection.push_back(OP_COPY);
                     break;
 
                 case REGEX_ROT:
-                    // outputfile << OP_ROT << std::endl;
                     codesection.push_back(OP_ROT);
                     break;
 
                 case REGEX_SUM:
-                    // outputfile << OP_SUM << std::endl;
                     codesection.push_back(OP_SUM);
                     break;
 
                 case REGEX_PUT:
-                    // outputfile << OP_PUT << std::endl;
                     codesection.push_back(OP_PUT);
                     break;
 
                 case REGEX_PUTC:
-                    // outputfile << OP_PUTC << std::endl;
                     codesection.push_back(OP_PUTC);
                     break;
 
                 case REGEX_PUTNL:
-                    // outputfile << OP_PUTNL << std::endl;
                     codesection.push_back(OP_PUTNL);
                     break;
 
                 case REGEX_SWAP:
-                    // outputfile << OP_SWAP << std::endl;
                     codesection.push_back(OP_SWAP);
                     break;
 
                 case REGEX_SUB:
-                    // outputfile << OP_SUB << std::endl;
                     codesection.push_back(OP_SUB);
                     break;
 
@@ -271,24 +237,18 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
             std::cout << "match not found on line " << linenumber << ": "
                       << std::endl;
             std::cout << line << std::endl;
-            // closeanddeletefile(outputfile, outputfilename);
             inputfile.close();
-            // exit(1);
             return 1;
         }
         linenumber++;
     }
     if (!end_type.empty()) {
         std::cout << "ERROR END miss match" << std::endl;
-        // closeanddeletefile(outputfile, outputfilename);
         inputfile.close();
-        // exit(1);
         return 1;
     }
 
-    // outputfile << OP_EXIT;
     codesection.push_back(OP_EXIT);
     inputfile.close();
-    // outputfile.close();
     return 0;
 }

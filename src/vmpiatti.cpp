@@ -222,12 +222,12 @@ bool handleroperationif(std::stack<long> &s, bool debugprint,
 size_t jumpbackto(std::vector<int> codesection, const size_t current_index,
                   const int current_inst, const int dest_inst) {
     long current_inst_counter = 0;
-    for (size_t i = current_index; i >= 0; i--) {
+    for (long i = static_cast<long>(current_index); i >= 0; i--) {
         if (codesection[i] == current_inst) {
             current_inst_counter++;
         }
         if (codesection[i] == dest_inst && current_inst_counter == 0) {
-            return i - current_index;
+            return static_cast<size_t>(i);
         } else if (codesection[i] == dest_inst && current_inst_counter != 0) {
             current_inst_counter--;
         }
@@ -239,12 +239,12 @@ size_t jumpbackto(std::vector<int> codesection, const size_t current_index,
 size_t jumpforwardto(std::vector<int> codesection, const size_t current_index,
                      const int current_inst, const int dest_inst) {
     long current_inst_counter = 0;
-    for (size_t i = 0; i < current_index; i++) {
+    for (long i = 0; i < static_cast<long>(current_index); i++) {
         if (codesection[i] == current_inst) {
             current_inst_counter++;
         }
         if (codesection[i] == dest_inst && current_inst_counter == 0) {
-            return i + current_index;
+             return static_cast<size_t>(i);
         } else if (codesection[i] == dest_inst && current_inst_counter != 0) {
             current_inst_counter--;
         }
@@ -380,7 +380,6 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
             case OP_REPEAT:
                 data = datasection[datai];
                 repeatn = handleroperationrepeat(s, debugprint, data);
-                // std::cout << repeatn << std::endl;
                 if (repeatn == 0) {
                     i = jumpforwardto(codesection, i, OP_REPEAT, OP_ENDREPEAT);
                 }

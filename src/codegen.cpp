@@ -89,12 +89,12 @@ int handle_end_type(std::stack<int> &end_type, std::vector<int> &codesection) {
                 break;
 
             case END_ELIF:
-                codesection.push_back(OP_ELIF);
+                codesection.push_back(OP_ENDELIF);
                 end_type.pop();
                 break;
 
             case END_ELSE:
-                codesection.push_back(OP_ELSE);
+                codesection.push_back(OP_ENDELSE);
                 end_type.pop();
                 break;
 

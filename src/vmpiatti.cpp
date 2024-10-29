@@ -243,8 +243,8 @@ size_t jumpforwardto(std::vector<int> &codesection, const size_t current_index,
                      const int current_inst, const int dest_inst) {
     long current_inst_counter = 0;
     for (size_t i = current_index; i < codesection.size(); i++) {
-        std::cout << "code: " << codesection[i] << std::endl;
-        std::cout << "couter: " << current_inst_counter << std::endl;
+        // std::cout << "code: " << codesection[i] << std::endl;
+        // std::cout << "couter: " << current_inst_counter << std::endl;
         if (codesection[i] == current_inst && i != current_index) {
             current_inst_counter++;
         }

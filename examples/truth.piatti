@@ -1,4 +1,4 @@
-PUSH 1 #or 0
+PUSH 0 #or 0
 
 IF TOP == 0 DO
     PUSH 0

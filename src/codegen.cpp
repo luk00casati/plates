@@ -69,6 +69,7 @@ std::string removespace(std::string str) {
 
 int handle_end_type(std::stack<int> &end_type, std::vector<int> &codesection) {
     if (end_type.empty()) {
+        std::cout << "end_type empty" << std::endl;
         return 1;
     } else {
         switch (end_type.top()) {

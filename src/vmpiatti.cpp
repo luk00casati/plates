@@ -336,6 +336,10 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 sput(s, debugprint);
                 break;
 
+            case OP_DROP:
+                sdrop(s, debugprint);
+                break;
+
             case OP_PUTNL:
                 printf("\n");
                 break;

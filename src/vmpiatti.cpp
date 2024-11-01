@@ -230,8 +230,8 @@ size_t jumpbackto(std::vector<int> &codesection, const size_t current_index,
             current_inst_counter++;
         }
         if (codesection[i] == dest_inst && current_inst_counter == 0) {
-            //std::cout << "ret: " << i << std::endl;
-            return i + current_index;
+            // std::cout << "ret: " << i << std::endl;
+            return i;
 
         } else if (codesection[i] == dest_inst && current_inst_counter != 0) {
             current_inst_counter--;
@@ -274,10 +274,12 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
     size_t i = 0;
     bool run = true;
     while (run) {
+        /*
         if (i >= codesection.size()) {
             std::cout << "reaching end codesetion" << std::endl;
             break;
         }
+        */
         int inst = codesection[i];
 
 #ifdef DEBUG
@@ -372,7 +374,7 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 // std::cout << ifflag << std::endl;
                 if (ifflag == false) {
                     jump = jumpforwardto(codesection, i, OP_IF, OP_ENDIF);
-                    i = jump + i;
+                    i = jump;
                 }
                 break;
 
@@ -381,14 +383,17 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 elifflag = handleroperationif(s, debugprint, data);
                 if (ifflag == true || elifflag == false) {
                     jump = jumpforwardto(codesection, i, OP_ELIF, OP_ENDELIF);
-                    i = jump + i;
+                    i = jump;
                 }
                 break;
 
             case OP_ELSE:
                 if (ifflag == true || elifflag == true) {
+                    // std::cout << "before endelse: " << i << std::endl;
                     jump = jumpforwardto(codesection, i, OP_ELSE, OP_ENDELSE);
-                    i = jump + i;
+                    i = jump;
+                    // std::cout << "endelsei: " << i << "endelsejump: " << jump
+                    // << std::endl;
                 }
                 break;
 
@@ -396,9 +401,10 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 data = datasection[i];
                 repeatn = handleroperationrepeat(s, debugprint, data);
                 if (repeatn == 0) {
-                    jump = jumpforwardto(codesection, i, OP_REPEAT, OP_ENDREPEAT);
-                    i = jump + i;
-                    //std::cout << "repeat: " << i << std::endl;
+                    jump =
+                        jumpforwardto(codesection, i, OP_REPEAT, OP_ENDREPEAT);
+                    i = jump;
+                    // std::cout << "repeat: " << i << std::endl;
                 }
                 break;
 
@@ -407,10 +413,11 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                     std::cout << "error reapeat panic" << std::endl;
                 } else if (repeatn == 1) { /*null*/
                 } else if (repeatn > 1) {
-                    //std::cout << "before endrepeat: " << i << std::endl;
+                    // std::cout << "before endrepeat: " << i << std::endl;
                     jump = jumpbackto(codesection, i, OP_ENDREPEAT, OP_REPEAT);
-                    i = jump - i;
-                    //std::cout << "endrepeati: " << i << "endrepeatjump: " << jump << std::endl;
+                    i = jump;
+                    // std::cout << "endrepeati: " << i << "endrepeatjump: " <<
+                    // jump << std::endl;
                     repeatn--;
                 }
                 break;
@@ -422,13 +429,13 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
             case OP_BREAK:
                 loopflag = false;
                 jump = jumpforwardto(codesection, i, OP_BREAK, OP_ENDLOOP);
-                i = jump + i;
+                i = jump;
                 break;
 
             case OP_ENDLOOP:
                 if (loopflag) {
                     jump = jumpbackto(codesection, i, OP_ENDLOOP, OP_LOOP);
-                    i = jump - i;
+                    i = jump;
                 }
                 break;
 

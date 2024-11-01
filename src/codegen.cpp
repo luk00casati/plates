@@ -268,8 +268,9 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
         return 1;
     }
 
-    if (datasection.size() != codesection.size()){
-        std::cout << "ERROR datasection and codesection miss match" << std::endl;
+    if (datasection.size() != codesection.size()) {
+        std::cout << "ERROR datasection and codesection miss match"
+                  << std::endl;
         inputfile.close();
         return 1;
     }

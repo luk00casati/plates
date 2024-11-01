@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "codegen.hpp"
-#include "vmpiatti.hpp"
 #include "define.hpp"
+#include "vmpiatti.hpp"
 
 int main(int argc, char** argv) {
     if (argc <= 1) {

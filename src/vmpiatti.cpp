@@ -371,7 +371,8 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 ifflag = handleroperationif(s, debugprint, data);
                 // std::cout << ifflag << std::endl;
                 if (ifflag == false) {
-                    i += jumpforwardto(codesection, i, OP_IF, OP_ENDIF);
+                    jump = jumpforwardto(codesection, i, OP_IF, OP_ENDIF);
+                    i = jump + i;
                 }
                 break;
 
@@ -379,13 +380,15 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
                 data = datasection[i];
                 elifflag = handleroperationif(s, debugprint, data);
                 if (ifflag == true || elifflag == false) {
-                    i += jumpforwardto(codesection, i, OP_ELIF, OP_ENDELIF);
+                    jump = jumpforwardto(codesection, i, OP_ELIF, OP_ENDELIF);
+                    i = jump + i;
                 }
                 break;
 
             case OP_ELSE:
                 if (ifflag == true || elifflag == true) {
-                    i += jumpforwardto(codesection, i, OP_ELSE, OP_ENDELSE);
+                    jump = jumpforwardto(codesection, i, OP_ELSE, OP_ENDELSE);
+                    i = jump + i;
                 }
                 break;
 
@@ -418,12 +421,14 @@ void vmrun(std::stack<long> &s, bool &debugprint, std::vector<int> &codesection,
 
             case OP_BREAK:
                 loopflag = false;
-                i += jumpforwardto(codesection, i, OP_BREAK, OP_ENDLOOP);
+                jump = jumpforwardto(codesection, i, OP_BREAK, OP_ENDLOOP);
+                i = jump + i;
                 break;
 
             case OP_ENDLOOP:
                 if (loopflag) {
-                    i -= jumpbackto(codesection, i, OP_ENDLOOP, OP_LOOP);
+                    jump = jumpbackto(codesection, i, OP_ENDLOOP, OP_LOOP);
+                    i = jump - i;
                 }
                 break;
 

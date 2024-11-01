@@ -64,3 +64,7 @@
 #define OP_ENDLOOP 27
 #define OP_EXIT 28
 #define OP_PUSHC 29
+
+#define NULLSTR "NULLSTR"
+
+//#define DEBUG

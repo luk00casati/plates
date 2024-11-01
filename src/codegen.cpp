@@ -165,15 +165,18 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
                 case REGEX_ELSE:
                     codesection.push_back(OP_ELSE);
                     end_type.push(END_ELSE);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_LOOP:
                     codesection.push_back(OP_LOOP);
                     end_type.push(END_LOOP);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_END:
                     if (handle_end_type(end_type, codesection) == 0) {
+                        datasection.push_back(NULLSTR);
                         break;
                     } else {
                         std::cout << "ERROR END miss match" << std::endl;
@@ -183,54 +186,66 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
 
                 case REGEX_COPY:
                     codesection.push_back(OP_COPY);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_ROT:
                     codesection.push_back(OP_ROT);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_SUM:
                     codesection.push_back(OP_SUM);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_PUT:
                     codesection.push_back(OP_PUT);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_PUTC:
                     codesection.push_back(OP_PUTC);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_PUTNL:
                     codesection.push_back(OP_PUTNL);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_SWAP:
                     codesection.push_back(OP_SWAP);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_SUB:
                     codesection.push_back(OP_SUB);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_EMPTYLINE:
-                    // NULL
+                    // NULLSTR
                     break;
 
                 case REGEX_DEBUGON:
                     codesection.push_back(OP_DEBUGON);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_DEBUGOFF:
                     codesection.push_back(OP_DEBUGOFF);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_BREAK:
                     codesection.push_back(OP_BREAK);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 case REGEX_DROP:
                     codesection.push_back(OP_DROP);
+                    datasection.push_back(NULLSTR);
                     break;
 
                 default:
@@ -253,7 +268,14 @@ int genir(const std::string inputfilename, std::vector<int> &codesection,
         return 1;
     }
 
+    if (datasection.size() != codesection.size()){
+        std::cout << "ERROR datasection and codesection miss match" << std::endl;
+        inputfile.close();
+        return 1;
+    }
+
     codesection.push_back(OP_EXIT);
+    datasection.push_back(NULLSTR);
     inputfile.close();
     return 0;
 }

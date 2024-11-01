@@ -52,7 +52,7 @@ truth machine
 ```
 PUSH 1 #or 0
 
-IF POP == 0 DO
+IF TOP == 0 DO
     PUSH 0
     PUT
     PUTNL
